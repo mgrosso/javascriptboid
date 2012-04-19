@@ -1,0 +1,40 @@
+= form_for @flock do |f|
+  -if @flock.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@flock.errors.count, "error")} prohibited this flock from being saved:"
+      %ul
+        - @flock.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :avoid
+    = f.text_field :avoid
+  .field
+    = f.label :align
+    = f.text_field :align
+  .field
+    = f.label :center
+    = f.text_field :center
+  .field
+    = f.label :jitter
+    = f.text_field :jitter
+  .field
+    = f.label :goalseek
+    = f.text_field :goalseek
+  .field
+    = f.label :boids
+    = f.number_field :boids
+  .field
+    = f.label :boidsize
+    = f.number_field :boidsize
+  .field
+    = f.label :width
+    = f.number_field :width
+  .field
+    = f.label :height
+    = f.number_field :height
+  .actions
+    = f.submit 'Save'

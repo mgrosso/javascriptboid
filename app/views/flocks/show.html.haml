@@ -1,0 +1,36 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @flock.name
+%p
+  %b Avoid:
+  = @flock.avoid
+%p
+  %b Align:
+  = @flock.align
+%p
+  %b Center:
+  = @flock.center
+%p
+  %b Jitter:
+  = @flock.jitter
+%p
+  %b Goalseek:
+  = @flock.goalseek
+%p
+  %b Boids:
+  = @flock.boids
+%p
+  %b Boidsize:
+  = @flock.boidsize
+%p
+  %b Width:
+  = @flock.width
+%p
+  %b Height:
+  = @flock.height
+
+= link_to 'Edit', edit_flock_path(@flock)
+\|
+= link_to 'Back', flocks_path

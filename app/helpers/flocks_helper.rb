@@ -1,0 +1,2 @@
+module FlocksHelper
+end

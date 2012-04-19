@@ -1,0 +1,37 @@
+%h1 Listing flocks
+
+%table
+  %tr
+    %th Name
+    %th Avoid
+    %th Align
+    %th Center
+    %th Jitter
+    %th Goalseek
+    %th Boids
+    %th Boidsize
+    %th Width
+    %th Height
+    %th
+    %th
+    %th
+
+  - @flocks.each do |flock|
+    %tr
+      %td= flock.name
+      %td= flock.avoid
+      %td= flock.align
+      %td= flock.center
+      %td= flock.jitter
+      %td= flock.goalseek
+      %td= flock.boids
+      %td= flock.boidsize
+      %td= flock.width
+      %td= flock.height
+      %td= link_to 'Show', flock
+      %td= link_to 'Edit', edit_flock_path(flock)
+      %td= link_to 'Destroy', flock, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Flock', new_flock_path

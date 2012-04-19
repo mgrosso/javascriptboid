@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  avoid: 9.99
+  align: 9.99
+  center: 9.99
+  jitter: 9.99
+  goalseek: 9.99
+  boids: 1
+  boidsize: 1
+  width: 1
+  height: 1
+
+two:
+  name: MyString
+  avoid: 9.99
+  align: 9.99
+  center: 9.99
+  jitter: 9.99
+  goalseek: 9.99
+  boids: 1
+  boidsize: 1
+  width: 1
+  height: 1
