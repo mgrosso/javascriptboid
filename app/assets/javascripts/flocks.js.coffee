@@ -51,8 +51,15 @@ class Flock
   redraw: ->
     @r.refresh()
     this.draw()
+  adjust: ( p, delta, w ) ->
+    ret = p + delta
+    if ret < 0
+      ret = @width - ret
+    else if ret > w
+      ret = ret - w
+    ret
   update: ->
-    ( @p[i] = @p[i] + @v[i] ) for i in [0..(@boids * 2 -1)]
+    ( @p[i] = this.adjust(@p[i], @v[i], @width ) ) for i in [0..(@boids * 2 -1)]
     this
   frame: ->
     this.live = 1
