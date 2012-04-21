@@ -103,7 +103,7 @@ class Flock
         [zeros,                 @align], 
         [zeros,                 @center], 
         [@random_velocities(1), @jitter], 
-        [zeros,                 @center] 
+        [zeros,                 @goalseek] 
     ]
     #console.log vpairs
     for id in [0..(@boids-1)]
