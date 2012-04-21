@@ -159,7 +159,7 @@ class @Flock
       @p[i] = @_adjust(@p[i], @v[i], (if (i % 2 == 0) then @width else @height ) )
     this
   frame: ->
-    return if @updating == 1
+    return if @updating == 1 || @running == 0
     if @maxloops > 0
       return if @loopnum++  > @maxloops
     @updating = 1
@@ -173,4 +173,4 @@ class @Flock
       setInterval( f, 30)
     this
   stop: ->
-    @maxloops = @loopnum
+    @running = 0
