@@ -63,8 +63,8 @@ class Flock
     else if ret > max
       ret = ret - max
     ret
-  _zeros: -> 
-    (0 for i in [1..(@boids * 2)])
+  _zeros: (len = @boids * 2 ) -> 
+    (0 for i in [1..len])
   _length: (a, b) ->
     Math.sqrt( a * a + b * b )
   _delta: (a1, a2, size ) ->
@@ -77,30 +77,68 @@ class Flock
     else
       len = @_length(x,y)
       ret = [ x / len, y / len ] 
+  _distances: ->
+    @distances = []
+    @xdeltas   = []
+    @ydeltas   = []
+    for i in [0..(@boids-1)]
+      for j in [0..(@boids-1)] when j isnt i and j > i
+        xd = @_delta( @p[i*2], @p[j*2], @width )
+        yd = @_delta( @p[i*2 + 1], @p[j*2 + 1], @height )
+        @distances[ i * @boids + j ] = Math.sqrt( xd * xd + yd * yd )
+        @xdeltas[i * @boids + j] = xd
+        @xdeltas[j * @boids + i] = - xd
+        @ydeltas[i * @boids + j] = yd
+        @ydeltas[j * @boids + i] = - yd
+    @distances
+  _distance: (i, j ) ->
+    if i == j 
+      [ 0, 0, 0 ]
+    else if j < i
+      [ 
+        @distances[j * @boids + i], 
+        @xdeltas[i * @boids + j], 
+        @ydeltas[i * @boids + j] 
+      ]
+    else
+      [ 
+        @distances[i * @boids + j],
+        @xdeltas[i * @boids + j], 
+        @ydeltas[i * @boids + j] 
+      ]
+  _force: (distance, cutoff) ->
+    force = @boidsize / ( distance * distance )
+    force = 0 if distance > @boidsize * cutoff 
+    force
   _avoid: ->
     ret = @_zeros()
     for i in [0..(@boids-1)]
       ixd = iyd = nixd = niyd = 0
       for j in [0..(@boids-1)] when j isnt i
-        xd = @_delta( @p[i*2], @p[j*2], @width )
-        yd = @_delta( @p[i*2 + 1], @p[j*2 + 1], @width )
-        len = Math.sqrt( xd * xd + yd * yd )
-        force = @boidsize / ( len * len )
-        if len > @boidsize * 2 then force = 0
+        [ distance, xd, yd ] = @_distance( i, j )
+        force = @_force(distance, 2 )
         ixd = ixd + xd * force
         iyd = iyd + yd * force
-        ##console.log '_avoid',i,j,'diff=',xd,yd,'len,force =',len,force,'ixd,iyd=',ixd,iyd 
+        ##console.log '_avoid',i,j,'diff=',xd,yd,'distance,force =',distance,force,'ixd,iyd=',ixd,iyd 
       [ nixd, niyd ] = @_norm( ixd, iyd)
       #console.log '_avoid B: ',i, ixd, iyd, nixd, niyd
       ret[i*2] = nixd
       ret[i*2 + 1] = niyd
     ret
+  _align: ->
+    ret = @_zeros()
+    for i in [0..(@boids-1)]
+      force = xd = yd = 0
+      for j in [0..(@boids-1)] when j isnt i
+        w = @_force(i,j)
+    ret
   _update_velocities: ->
     zeros  = @_zeros()
+    @_distances()
     vpairs = [
         [@v,                    @inertia], 
         [@_avoid(),             @avoid], 
-        [zeros,                 @align], 
+        [@_align(),             @align], 
         [zeros,                 @center], 
         [@random_velocities(1), @jitter], 
         [zeros,                 @goalseek] 
