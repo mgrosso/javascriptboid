@@ -1,4 +1,4 @@
-class Flock
+class @Flock
   constructor: (@name, @avoid, @align, @center, @jitter, @goalseek, @boids, @boidsize, @width, @height ) ->
     
   random_velocity: (scale) ->
@@ -8,6 +8,7 @@ class Flock
   
   initialize: ->
     @inertia = 4
+    @running = 0
     @loopnum = 0
     @p = ((Math.random() * @width ) for i in [1.. @boids * 2])
     @vscale = @boidsize / 4
@@ -158,29 +159,18 @@ class Flock
       @p[i] = @_adjust(@p[i], @v[i], (if (i % 2 == 0) then @width else @height ) )
     this
   frame: ->
-    return if @working == 1
+    return if @updating == 1
     if @maxloops > 0
       return if @loopnum++  > @maxloops
-    @working = 1
+    @updating = 1
     this._update().redraw()
-    @working = 0
-  loop: (loops = -1 ) ->
+    @updating = 0
+  start: (loops = -1 ) ->
     @maxloops = loops
-    f = => this.frame()
-    setInterval( f, 30)
+    unless @running > 0
+      @running = 1
+      f = => @frame()
+      setInterval( f, 30)
     this
-
-@draw_flock = (h = {}) ->
-  h['name']      ||= "MyFlock"
-  h['avoid']     ||= 1
-  h['align']     ||= 1
-  h['center']    ||= 1
-  h['jitter']    ||= 1
-  h['goalseek']  ||= 1
-  h['boids']     ||= 10
-  h['boidsize']  ||= 30
-  h['width']     ||= 500
-  h['height']    ||= 500
-  f = new Flock( h['name'], h['avoid'], h['align'], h['center'], h['jitter'], h['goalseek'], h['boids'], h['boidsize'], h['width'], h['height'] )
-  return f
-
+  stop: ->
+    @maxloops = @loopnum
