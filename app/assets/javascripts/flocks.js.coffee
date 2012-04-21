@@ -1,34 +1,3 @@
-class FlockRenderCanvas
-  constructor: (@width, @height ) ->
-    
-  initialize: ->
-    jqobj = $("#cv")
-    @cnv = jqobj.get 0
-    @cnv.width = @width
-    @ctx = @cnv.getContext '2d'
-    @pi2 = 2 * Math.PI
-    this
-  draw_circle: (x,y,size) -> 
-    @ctx.beginPath()
-    @ctx.arc x, y, size, 0, @pi2, false
-    @ctx.fillStyle = "#a8cb8a"
-    @ctx.fill()
-    @ctx.closePath()
-    @ctx.strokeStyle = "#232323"
-    @ctx.stroke()
-    this
-  draw_rect: (x,y,size) -> 
-    @ctx.lineWidth = 4
-    @ctx.strokeStyle = "#4ed66f"
-    @ctx.strokeRect x, y, size, size
-    this
-  refresh: -> 
-    @ctx.fillStyle = "#ffffff"
-    @ctx.fillRect(0, 0, @width, @height)
-    this
-  draw_bird: (x,y,size) -> 
-    this.draw_circle x, y, size
-
 class Flock
   constructor: (@name, @avoid, @align, @center, @jitter, @goalseek, @boids, @boidsize, @width, @height ) ->
     
@@ -43,7 +12,7 @@ class Flock
     @p = ((Math.random() * @width ) for i in [1.. @boids * 2])
     @vscale = @boidsize / 4
     @v = this.random_velocities(@vscale ) 
-    @r = new FlockRenderCanvas( @width, @height )
+    @r = new FlockCanvas( @width, @height )
     @r.initialize()
     this
   draw_bird: (id) ->
@@ -67,7 +36,7 @@ class Flock
     (0 for i in [1..len])
   _length: (a, b) ->
     Math.sqrt( a * a + b * b )
-  _delta: (a1, a2, size ) ->
+  _pdelta: (a1, a2, size ) ->
     d1 = a1 - a2
     d2 = size + a2 - a1
     ret = if Math.abs(d1) < Math.abs(d2) then d1 else d2
@@ -78,14 +47,16 @@ class Flock
       len = @_length(x,y)
       ret = [ x / len, y / len ] 
   _distances: ->
+    @neighbors = new NNearest 4
     @distances = []
     @xdeltas   = []
     @ydeltas   = []
     for i in [0..(@boids-1)]
       for j in [0..(@boids-1)] when j isnt i and j > i
-        xd = @_delta( @p[i*2], @p[j*2], @width )
-        yd = @_delta( @p[i*2 + 1], @p[j*2 + 1], @height )
-        @distances[ i * @boids + j ] = Math.sqrt( xd * xd + yd * yd )
+        xd = @_pdelta( @p[i*2], @p[j*2], @width )
+        yd = @_pdelta( @p[i*2 + 1], @p[j*2 + 1], @height )
+        d = @distances[ i * @boids + j ] = Math.sqrt( xd * xd + yd * yd )
+        @neighbors.add d, i, j
         @xdeltas[i * @boids + j] = xd
         @xdeltas[j * @boids + i] = - xd
         @ydeltas[i * @boids + j] = yd
@@ -127,10 +98,16 @@ class Flock
     ret
   _align: ->
     ret = @_zeros()
-    for i in [0..(@boids-1)]
-      force = xd = yd = 0
-      for j in [0..(@boids-1)] when j isnt i
-        w = @_force(i,j)
+    for i, pairs of @neighbors.all()
+      x = y = weight = 0
+      for pair in pairs
+        w = 1 / pair[0]
+        j = pair[1]
+        weight = weight + w
+        x = x + w * @v[j*2]
+        y = y + w * @v[j*2+1]
+      ret[i*2] = if weight == 0 then 0 else x / weight
+      ret[i*2+1] = if weight == 0 then 0 else y / weight
     ret
   _update_velocities: ->
     zeros  = @_zeros()
