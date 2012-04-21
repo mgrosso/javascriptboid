@@ -32,12 +32,17 @@ class FlockRenderCanvas
 class Flock
   constructor: (@name, @avoid, @align, @center, @jitter, @goalseek, @boids, @boidsize, @width, @height ) ->
     
-  random_velocity: ->
-    ((Math.random() + Math.random() + Math.random()) / 3 ) * @boidsize - @boidsize / 2
+  random_velocity: (scale) ->
+    ((Math.random() + Math.random() + Math.random()) / 3 ) * scale - scale / 2
+  random_velocities: (scale) ->
+    (this.random_velocity(scale)  for i in [1.. @boids * 2])
   
   initialize: ->
+    @inertia = 4
+    @loopnum = 0
     @p = ((Math.random() * @width ) for i in [1.. @boids * 2])
-    @v = (this.random_velocity() for i in [1.. @boids * 2])
+    @vscale = @boidsize / 4
+    @v = this.random_velocities(@vscale ) 
     @r = new FlockRenderCanvas( @width, @height )
     @r.initialize()
     this
@@ -51,25 +56,92 @@ class Flock
   redraw: ->
     @r.refresh()
     this.draw()
-  adjust: ( p, delta, w ) ->
+  _adjust: ( p, delta, max ) ->
     ret = p + delta
     if ret < 0
-      ret = @width - ret
-    else if ret > w
-      ret = ret - w
+      ret = max - ret
+    else if ret > max
+      ret = ret - max
     ret
-  update: ->
-    ( @p[i] = this.adjust(@p[i], @v[i], @width ) ) for i in [0..(@boids * 2 -1)]
+  _zeros: -> 
+    (0 for i in [1..(@boids * 2)])
+  _length: (a, b) ->
+    Math.sqrt( a * a + b * b )
+  _delta: (a1, a2, size ) ->
+    d1 = a1 - a2
+    d2 = size + a2 - a1
+    ret = if Math.abs(d1) < Math.abs(d2) then d1 else d2
+  _norm: (x, y) ->
+    if x==0 and y==0 
+      ret = [ 0, 0]
+    else
+      len = @_length(x,y)
+      ret = [ x / len, y / len ] 
+  _avoid: ->
+    ret = @_zeros()
+    for i in [0..(@boids-1)]
+      ixd = iyd = nixd = niyd = 0
+      for j in [0..(@boids-1)] when j isnt i
+        xd = @_delta( @p[i*2], @p[j*2], @width )
+        yd = @_delta( @p[i*2 + 1], @p[j*2 + 1], @width )
+        len = Math.sqrt( xd * xd + yd * yd )
+        force = @boidsize / ( len * len )
+        if len > @boidsize * 2 then force = 0
+        ixd = ixd + xd * force
+        iyd = iyd + yd * force
+        ##console.log '_avoid',i,j,'diff=',xd,yd,'len,force =',len,force,'ixd,iyd=',ixd,iyd 
+      [ nixd, niyd ] = @_norm( ixd, iyd)
+      #console.log '_avoid B: ',i, ixd, iyd, nixd, niyd
+      ret[i*2] = nixd
+      ret[i*2 + 1] = niyd
+    ret
+  _update_velocities: ->
+    zeros  = @_zeros()
+    vpairs = [
+        [@v,                    @inertia], 
+        [@_avoid(),             @avoid], 
+        [zeros,                 @align], 
+        [zeros,                 @center], 
+        [@random_velocities(1), @jitter], 
+        [zeros,                 @center] 
+    ]
+    #console.log vpairs
+    for id in [0..(@boids-1)]
+      xi = id * 2
+      yi = xi + 1
+      weight = x = y = 0
+      for pair in vpairs
+        ar= pair[0]
+        w = pair[1]
+        weight = weight + w
+        x = x + ar[xi] * w
+        y = y + ar[yi] * w
+      xw = x / weight
+      yw = y / weight
+      len = Math.sqrt( x * x + y * y )
+      xnew = ( xw / len  ) * @vscale
+      ynew = ( yw / len  ) * @vscale
+      #console.log( 'vupdate', id, 'x,y=', @v[xi], @v[yi], 'rawnew=', x, y, 'wnew=',xw, yw, 'scale, len=', @vscale, len, '[xy]new=', xnew, ynew )
+      @v[xi] = xnew
+      @v[yi] = ynew
+    this
+  _update: ->
+    @_update_velocities()
+    for i in [0..(@boids * 2 -1)]
+      @p[i] = @_adjust(@p[i], @v[i], (if (i % 2 == 0) then @width else @height ) )
     this
   frame: ->
-    this.live = 1
-    this.update().redraw()
-    this.live = 0
-  loop: ->
+    return if @working == 1
+    if @maxloops > 0
+      return if @loopnum++  > @maxloops
+    @working = 1
+    this._update().redraw()
+    @working = 0
+  loop: (loops = -1 ) ->
+    @maxloops = loops
     f = => this.frame()
     setInterval( f, 30)
     this
-    
 
 this.draw_flock = ->
   f = new Flock "MyFlock", 1, 1, 1, 1, 1, 10, 30, 500, 500
