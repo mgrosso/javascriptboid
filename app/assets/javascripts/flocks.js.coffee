@@ -109,6 +109,18 @@ class Flock
       ret[i*2] = if weight == 0 then 0 else x / weight
       ret[i*2+1] = if weight == 0 then 0 else y / weight
     ret
+  _center: ->
+    ret = @_zeros()
+    for i, pairs of @neighbors.all()
+      x = y = 0
+      for pair in pairs
+        j = pair[1]
+        x = x + @v[j*2]
+        y = y + @v[j*2+1]
+      sz = pairs.length
+      ret[i*2] = x / sz
+      ret[i*2+1] = y / sz
+    ret
   _update_velocities: ->
     zeros  = @_zeros()
     @_distances()
