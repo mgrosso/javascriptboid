@@ -23,6 +23,7 @@ class @Flock
   draw_bird: (id) ->
     idx = id * 2
     @r.draw_bird @p[idx], @p[idx+1], @boidsize / 2
+    if @halo then @r.draw_halo @p[idx], @p[idx+1], @neighbor_cutoff 
     this
   draw: ->
     ( this.draw_bird i ) for i in [0..(@boids-1)]
@@ -178,3 +179,5 @@ class @Flock
     this
   stop: ->
     @running = 0
+  draw_halo: (tf = 1) ->
+    @halo = tf

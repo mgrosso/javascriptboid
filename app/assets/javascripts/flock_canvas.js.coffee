@@ -8,6 +8,12 @@ class @FlockCanvas
     @ctx = @cnv.getContext '2d'
     @pi2 = 2 * Math.PI
     this
+  draw_halo: (x,y,size) -> 
+    @ctx.beginPath()
+    @ctx.arc x, y, size, 0, @pi2, false
+    @ctx.closePath()
+    @ctx.strokeStyle = "#232323"
+    @ctx.stroke()
   draw_circle: (x,y,size) -> 
     @ctx.beginPath()
     @ctx.arc x, y, size, 0, @pi2, false
