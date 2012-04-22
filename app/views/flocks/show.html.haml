@@ -1,6 +1,6 @@
 #debug 
 #flock 
-  %canvas#cv{ width: 500, height: 500 }
+  %canvas#cv{ width: @flock.width, height: @flock.height }
   %script
     != "window.flock = #{@flock.to_json};"
     != "addLoadEvent(function(){window.flock_run = make_flock(window.flock).initialize().start();});"
