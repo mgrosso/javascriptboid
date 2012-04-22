@@ -10,8 +10,8 @@ class @Flock
     @inertia = 4
     @running = 0
     @loopnum = 0
+    @vscale = @boidsize * 1
     @p = ((Math.random() * @width ) for i in [1.. @boids * 2])
-    @vscale = @boidsize / 4
     @v = this.random_velocities(@vscale ) 
     @r = new FlockCanvas( @width, @height )
     @r.initialize()
