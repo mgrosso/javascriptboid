@@ -131,7 +131,7 @@ class @Flock
         [@v,                    @inertia], 
         [@_avoid(),             @avoid], 
         [@_align(),             @align], 
-        [zeros,                 @center], 
+        [@_center(),            @center], 
         [@random_velocities(1), @jitter], 
         [zeros,                 @goalseek] 
     ]
