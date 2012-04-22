@@ -132,10 +132,10 @@ class @Flock
     vpairs = [
         [@v,                    @inertia], 
         [@_avoid(),             @avoid], 
-        [@_align(),             @align], 
         [@_center(),            @center], 
+        [@_align(),             @align], 
+        [zeros,                 @goalseek],
         [@random_velocities(1), @jitter], 
-        [zeros,                 @goalseek] 
     ]
     #console.log vpairs
     for id in [0..(@boids-1)]
