@@ -1,0 +1,19 @@
+!!! 5
+%html
+  %head
+    %meta{'http-equiv' => 'Content-Type', 
+        :content => 'text/html; charset=UTF-8'}/
+    :javascript
+      var fns=[];function addLoadEvent(func){fns.push(func);}
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    = yield
+  :javascript
+    $(document).ready(function(){
+      for( i=0; i< fns.length; ++i ){  
+        //console.debug([i,fns[i]]);
+        $(fns[i]); 
+      }   
+    }); 
