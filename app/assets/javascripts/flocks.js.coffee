@@ -11,6 +11,8 @@ class @Flock
     @running = 0
     @loopnum = 0
     @vscale = @boidsize * 1
+    @neighbor_cutoff = @boidsize * 5
+    @max_neighbors = 4
     @p = ((Math.random() * @width ) for i in [1.. @boids * 2])
     @v = this.random_velocities(@vscale ) 
     @r = new FlockCanvas( @width, @height )
@@ -48,7 +50,7 @@ class @Flock
       len = @_length(x,y)
       ret = [ x / len, y / len ] 
   _distances: ->
-    @neighbors = new NNearest 4
+    @neighbors = new NNearest @max_neighbors, @neighbor_cutoff
     @distances = []
     @xdeltas   = []
     @ydeltas   = []
