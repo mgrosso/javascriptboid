@@ -7,12 +7,14 @@ class @Flock
     (this.random_velocity(scale)  for i in [1.. @boids * 2])
   
   initialize: ->
-    @inertia = 4
+    # params that need to be passed in, not hard coded:
+    @inertia = 1
+    @vscale = @boidsize * 5
+    @neighbor_cutoff = @boidsize * 10
+    @max_neighbors = 4
+    # state that changes
     @running = 0
     @loopnum = 0
-    @vscale = @boidsize * 1
-    @neighbor_cutoff = @boidsize * 5
-    @max_neighbors = 4
     @p = ((Math.random() * @width ) for i in [1.. @boids * 2])
     @v = this.random_velocities(@vscale ) 
     @r = new FlockCanvas( @width, @height )
