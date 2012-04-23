@@ -8,8 +8,8 @@ class @Flock
   
   initialize: ->
     # params that need to be passed in, not hard coded:
-    @inertia = 0.3
-    @maxv = @boidsize * 5
+    @inertia = 0.9
+    @maxv = @boidsize 
     @neighbor_cutoff = @boidsize * 10
     @avoid_cutoff = @boidsize * 2
     @max_neighbors = 4
