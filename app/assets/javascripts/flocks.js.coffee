@@ -8,15 +8,15 @@ class @Flock
   
   initialize: ->
     # params that need to be passed in, not hard coded:
-    @inertia = 1
-    @vscale = @boidsize * 5
+    @inertia = 0.3
+    @maxv = @boidsize * 5
     @neighbor_cutoff = @boidsize * 10
     @max_neighbors = 4
     # state that changes
     @running = 0
     @loopnum = 0
     @p = ((Math.random() * @width ) for i in [1.. @boids * 2])
-    @v = this.random_velocities(@vscale ) 
+    @v = this.random_velocities(@maxv ) 
     @r = new FlockCanvas( @width, @height )
     @r.initialize()
     this
@@ -142,21 +142,23 @@ class @Flock
     for id in [0..(@boids-1)]
       xi = id * 2
       yi = xi + 1
-      weight = x = y = 0
+      len = weight = x = y = 0
       for pair in vpairs
+        continue if len >= @maxv
         ar= pair[0]
         w = pair[1]
         weight = weight + w
-        x = x + ar[xi] * w
-        y = y + ar[yi] * w
-      xw = x / weight
-      yw = y / weight
-      len = Math.sqrt( x * x + y * y )
-      xnew = ( xw / len  ) * @vscale
-      ynew = ( yw / len  ) * @vscale
-      #console.log( 'vupdate', id, 'x,y=', @v[xi], @v[yi], 'rawnew=', x, y, 'wnew=',xw, yw, 'scale, len=', @vscale, len, '[xy]new=', xnew, ynew )
-      @v[xi] = xnew
-      @v[yi] = ynew
+        dx = ar[xi] * w
+        dy = ar[yi] * w
+        delta_len = Math.sqrt( dx * dx + dy * dy )
+        if delta_len + len > @maxv
+          delta_len = @maxv - len
+          dx = dx / delta_len
+          dy = dy / delta_len
+        x = x + dx
+        y = y + dy
+      @v[xi] = x
+      @v[yi] = y
     this
   _update: ->
     @_update_velocities()
