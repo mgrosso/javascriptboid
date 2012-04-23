@@ -1,46 +1,57 @@
+%p#notice= notice
 #flock 
-  #start.link start
-  #stop.link stop
-  #halo.link halo
-  #reset.link reset
-  #step.link step
-  #redraw.link redraw
+  #controls 
+    %a#start.link start
+    %a#stop.link stop
+    %a#halo.link halo
+    %a#reset.link reset
+    %a#step.link step
+    %a#redraw.link redraw
+  #details
+    %p
+      %b Name:
+      = @flock.name
+      |
+    %p
+      %b Avoid:
+      = @flock.avoid
+      |
+    %p
+      %b Align:
+      = @flock.align
+      |
+    %p
+      %b Center:
+      = @flock.center
+      |
+    %p
+      %b Jitter:
+      = @flock.jitter
+      |
+    %p
+      %b Goalseek:
+      = @flock.goalseek
+      |
+    %p
+      %b Boids:
+      = @flock.boids
+      |
+    %p
+      %b Boidsize:
+      = @flock.boidsize
+      |
+    %p
+      %b Width:
+      = @flock.width
+      |
+    %p
+      %b Height:
+      = @flock.height
   %canvas#cv{ width: @flock.width, height: @flock.height }
   %script
     != "window.flock = #{@flock.to_json};"
     != "addLoadEvent(function(){window.flock_run = make_flock(window.flock).initialize().start();});"
-%p#notice= notice
-#details
-  %p
-    %b Name:
-    = @flock.name
-  %p
-    %b Avoid:
-    = @flock.avoid
-  %p
-    %b Align:
-    = @flock.align
-  %p
-    %b Center:
-    = @flock.center
-  %p
-    %b Jitter:
-    = @flock.jitter
-  %p
-    %b Goalseek:
-    = @flock.goalseek
-  %p
-    %b Boids:
-    = @flock.boids
-  %p
-    %b Boidsize:
-    = @flock.boidsize
-  %p
-    %b Width:
-    = @flock.width
-  %p
-    %b Height:
-    = @flock.height
+
 
 #nav
   = link_to 'Edit', edit_flock_path(@flock)

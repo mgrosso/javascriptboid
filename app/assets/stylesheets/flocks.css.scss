@@ -1,6 +1,17 @@
 // Place all the styles related to the flocks controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-#flock canvas { border: 1px solid black; }
+#flock canvas { border: 1px solid black; clear: left ; display: block; }
 #details p { margin: 0em; }
 #nav { margin: 0.5em 0 0.5em 0 ;}
+.link { cursor: pointer; color: "#0000ff";}
+#flock .link { 
+    float: left; 
+    clear: none; 
+    margin: 0; 
+    padding: 1em 1em 1em 0em; 
+    text-decoration: underline;
+    }
+#controls { float: left; clear: both; overflow: auto; }
+#details { float: left; clear: both; }
+#details p { float: left; clear: none; padding: 0.5em 0.5em 0.5em 0em ;}
