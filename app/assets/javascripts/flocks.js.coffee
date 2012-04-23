@@ -130,20 +130,21 @@ class @Flock
   _update_velocities: ->
     zeros  = @_zeros()
     @_distances()
-    vpairs = [
-        [@v,                    @inertia], 
-        [@_avoid(),             @avoid], 
-        [@_center(),            @center], 
-        [@_align(),             @align], 
-        [zeros,                 @goalseek],
-        [@random_velocities(1), @jitter], 
+    new_vpairs = [
+        [@v,                    @inertia,   'inertia'], 
+        [@_avoid(),             @avoid,     'avoid'],
+        [@_center(),            @center,    'center'],
+        [@_align(),             @align,     'align'], 
+        [zeros,                 @goalseek,  'goalseek'],
+        [@random_velocities(1), @jitter,    'jitter'], 
     ]
-    #console.log vpairs
+    @vpairs = new_vpairs
+    #console.log @vpairs
     for id in [0..(@boids-1)]
       xi = id * 2
       yi = xi + 1
       len = weight = x = y = 0
-      for pair in vpairs
+      for pair in @vpairs
         continue if len >= @maxv
         ar= pair[0]
         w = pair[1]
