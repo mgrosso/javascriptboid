@@ -11,6 +11,7 @@ class @Flock
     @inertia = 0.3
     @maxv = @boidsize * 5
     @neighbor_cutoff = @boidsize * 10
+    @avoid_cutoff = @boidsize * 2
     @max_neighbors = 4
     # state that changes
     @running = 0
@@ -24,6 +25,7 @@ class @Flock
     idx = id * 2
     @r.draw_bird @p[idx], @p[idx+1], @boidsize / 2
     if @halo then @r.draw_halo @p[idx], @p[idx+1], @neighbor_cutoff 
+    if @halo then @r.draw_halo @p[idx], @p[idx+1], @avoid_cutoff 
     this
   draw: ->
     ( this._draw_bird i ) for i in [0..(@boids-1)]
@@ -85,7 +87,7 @@ class @Flock
       ]
   _force: (distance, cutoff) ->
     force = @boidsize / ( distance * distance )
-    force = 0 if distance > @boidsize * cutoff 
+    force = 0 if distance > cutoff 
     force
   _avoid: ->
     ret = @_zeros()
@@ -93,7 +95,7 @@ class @Flock
       ixd = iyd = nixd = niyd = 0
       for j in [0..(@boids-1)] when j isnt i
         [ distance, xd, yd ] = @_distance( i, j )
-        force = @_force(distance, 2 )
+        force = @_force(distance, @avoid_cutoff )
         ixd = ixd + xd * force
         iyd = iyd + yd * force
         console.log '_avoid',i,j,'diff=',xd,yd,'distance,force =',distance,force,'ixd,iyd=',ixd,iyd 
