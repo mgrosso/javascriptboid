@@ -8,6 +8,15 @@ class @Flock
   
   initialize: ->
     # params that need to be passed in, not hard coded:
+    @arrow_colors = {
+      inertia: "#000000",
+      avoid:   "#ff0000",
+      center:  "#00ff00",
+      align:   "#0000ff",
+      goalseek:"#ffff00",
+      jitter:  "#00ffff",
+      }
+    @arrow = 0
     @inertia = 0.9
     @maxv = @boidsize 
     @neighbor_cutoff = @boidsize * 10
@@ -23,9 +32,17 @@ class @Flock
     this
   _draw_bird: (id) ->
     idx = id * 2
+    x = @p[idx]
+    y = @p[idx+1]
     @r.draw_bird @p[idx], @p[idx+1], @boidsize / 2
-    if @halo then @r.draw_halo @p[idx], @p[idx+1], @neighbor_cutoff 
-    if @halo then @r.draw_halo @p[idx], @p[idx+1], @avoid_cutoff 
+    if @halo 
+      @r.draw_halo x, y, @neighbor_cutoff 
+      @r.draw_halo x, y, @avoid_cutoff 
+    if @arrow 
+      for key, color of @arrow_colors
+        console.log key, color, id, @arrows
+        xy2 = @arrows[key][id]
+        @r.draw_line x, y, x + xy2[0], y + xy2[1], color
     this
   draw: ->
     ( this._draw_bird i ) for i in [0..(@boids-1)]
@@ -131,6 +148,15 @@ class @Flock
     ret
   _update_velocities: ->
     zeros  = @_zeros()
+    @arrows= { 
+      inertia: [],
+      avoid:   [],
+      center:  [],
+      align:   [],
+      goalseek:[],
+      jitter:  [],
+      velocity:[]
+      }
     @_distances()
     new_vpairs = [
         [@v,                    @inertia,   'inertia'], 
@@ -147,6 +173,7 @@ class @Flock
       yi = xi + 1
       len = weight = x = y = 0
       for pair in @vpairs
+        @arrows[ pair[2] ][ id ] = [ 0, 0 ]
         continue if len >= @maxv
         ar= pair[0]
         w = pair[1]
@@ -160,8 +187,10 @@ class @Flock
           dy = dy / delta_len
         x = x + dx
         y = y + dy
+        @arrows[ pair[2] ][ id ] = [ x, y ]
       @v[xi] = x
       @v[yi] = y
+      @arrows[ 'velocity' ][ id ] = [ x, y ]
     this
   _update: ->
     @_update_velocities()
@@ -186,6 +215,11 @@ class @Flock
     this
   stop: ->
     @running = 0
+  toggle_arrow: ->
+    if @arrow? and @arrow == 1
+      @arrow = 0 
+    else 
+      @arrow = 1
   toggle_halo: ->
     if @halo? and @halo == 1
       @halo = 0 

@@ -20,5 +20,6 @@
   $("#step").click => f.step()
   $("#reset").click => f.initialize()
   $("#halo").click => f.toggle_halo()
+  $("#arrow").click => f.toggle_arrow()
   $("#redraw").click => f.redraw()
   return f
