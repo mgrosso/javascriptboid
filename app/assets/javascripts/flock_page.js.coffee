@@ -17,8 +17,8 @@
   f = new Flock( h['name'], h['avoid'], h['align'], h['center'], h['jitter'], h['goalseek'], h['boids'], h['boidsize'], h['width'], h['height'] )
   $("#start").click => f.start()
   $("#stop").click => f.stop()
-  $("#halo").click => f.toggle_halo()
-  $("#restart").click => f.initialize()
   $("#step").click => f.step()
+  $("#reset").click => f.initialize()
+  $("#halo").click => f.toggle_halo()
   $("#redraw").click => f.redraw()
   return f
