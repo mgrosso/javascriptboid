@@ -6,15 +6,21 @@ class @Flock
   _random_velocities: (scale) ->
     (this._random_velocity(scale)  for i in [1.. @boids * 2])
   
+  toggle_component: (component) ->
+    if @arrow_show[component]
+        delete @arrow_show[component]
+    else
+        @arrow_show[component] = @arrow_colors[component]
   initialize: ->
     # params that need to be passed in, not hard coded:
+    @arrow_show = { }
     @arrow_colors = {
       inertia: "#000000",
       avoid:   "#ff0000",
       center:  "#00ff00",
       align:   "#0000ff",
-      goalseek:"#ffff00",
-      jitter:  "#00ffff",
+      goalseek:"#aaaa00",
+      jitter:  "#00aaaa",
       }
     @arrow = 0
     @inertia = 0.9
@@ -38,11 +44,9 @@ class @Flock
     if @halo 
       @r.draw_halo x, y, @neighbor_cutoff 
       @r.draw_halo x, y, @avoid_cutoff 
-    if @arrow 
-      for key, color of @arrow_colors
-        console.log key, color, id, @arrows
-        xy2 = @arrows[key][id]
-        @r.draw_line x, y, x + xy2[0], y + xy2[1], color
+    for key, color of @arrow_show
+      xy2 = @arrows[key][id]
+      @r.draw_line x, y, x + 10 * xy2[0], y + 10 * xy2[1], color
     this
   draw: ->
     ( this._draw_bird i ) for i in [0..(@boids-1)]

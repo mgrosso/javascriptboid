@@ -17,9 +17,18 @@
   f = new Flock( h['name'], h['avoid'], h['align'], h['center'], h['jitter'], h['goalseek'], h['boids'], h['boidsize'], h['width'], h['height'] )
   $("#start").click => f.start()
   $("#stop").click => f.stop()
+  $("#toggle_halo").click => f.toggle_halo()
+  $("#initialize").click => f.initialize()
   $("#step").click => f.step()
-  $("#reset").click => f.initialize()
-  $("#halo").click => f.toggle_halo()
-  $("#arrow").click => f.toggle_arrow()
   $("#redraw").click => f.redraw()
+  #######################################################################
+  # fascinating: this passes in component in all the handlers.
+  # essentially the function is being determined at compile time not 
+  # run time.
+  #######################################################################
+  $('#avoid').click => f.toggle_component( 'avoid')
+  $('#align').click => f.toggle_component( 'align')
+  $('#center').click => f.toggle_component( 'center')
+  $('#jitter').click => f.toggle_component( 'jitter')
+  $('#goalseek').click => f.toggle_component( 'goalseek')
   return f

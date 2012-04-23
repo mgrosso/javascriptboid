@@ -3,9 +3,8 @@
   #controls 
     %a#start.link Start
     %a#stop.link Stop
-    %a#halo.link Halo
-    %a#arrow.link Arrows
-    %a#reset.link Reset
+    %a#toggle_halo.link Halo
+    %a#initialize.link Reset
     %a#step.link Step
     %a#redraw.link Redraw
     .link= link_to 'Edit', edit_flock_path(@flock)
@@ -15,23 +14,23 @@
       %b Name:
       = @flock.name
       |
-    %p
+    %p#avoid.link
       %b Avoid:
       = @flock.avoid
       |
-    %p
+    %p#align.link
       %b Align:
       = @flock.align
       |
-    %p
+    %p#center.link
       %b Center:
       = @flock.center
       |
-    %p
+    %p#jitter.link
       %b Jitter:
       = @flock.jitter
       |
-    %p
+    %p#goalseek.link
       %b Goalseek:
       = @flock.goalseek
       |

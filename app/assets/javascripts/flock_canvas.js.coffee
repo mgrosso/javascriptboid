@@ -27,7 +27,7 @@ class @FlockCanvas
     @ctx.beginPath()
     @ctx.moveTo x1, y1
     @ctx.lineTo x2, y2
-    @ctx.lineWidth = 2
+    @ctx.lineWidth = 1
     @ctx.strokeStyle = color
     @ctx.stroke()
   draw_rect: (x,y,size) -> 
