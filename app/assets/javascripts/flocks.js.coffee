@@ -96,9 +96,9 @@ class @Flock
         force = @_force(distance, 2 )
         ixd = ixd + xd * force
         iyd = iyd + yd * force
-        ##console.log '_avoid',i,j,'diff=',xd,yd,'distance,force =',distance,force,'ixd,iyd=',ixd,iyd 
+        console.log '_avoid',i,j,'diff=',xd,yd,'distance,force =',distance,force,'ixd,iyd=',ixd,iyd 
       [ nixd, niyd ] = @_norm( ixd, iyd)
-      #console.log '_avoid B: ',i, ixd, iyd, nixd, niyd
+      console.log '_avoid B: ',i, ixd, iyd, nixd, niyd
       ret[i*2] = nixd
       ret[i*2 + 1] = niyd
     ret
