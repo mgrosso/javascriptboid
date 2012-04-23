@@ -183,9 +183,7 @@ class @Flock
   stop: ->
     @running = 0
   toggle_halo: ->
-    if ! @halo? or @halo == 0
-      @halo = 1 
+    if @halo? and @halo == 1
+      @halo = 0 
     else 
-      @halo = 0
-  draw_halo: (tf = 1) ->
-    @halo = tf
+      @halo = 1
