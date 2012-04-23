@@ -1,12 +1,14 @@
 %p#notice= notice
 #flock 
   #controls 
-    %a#start.link start
-    %a#stop.link stop
-    %a#halo.link halo
-    %a#reset.link reset
-    %a#step.link step
-    %a#redraw.link redraw
+    %a#start.link Start
+    %a#stop.link Stop
+    %a#halo.link Halo
+    %a#reset.link Reset
+    %a#step.link Step
+    %a#redraw.link Redraw
+    .link= link_to 'Edit', edit_flock_path(@flock)
+    .link= link_to 'Back', flocks_path
   #details
     %p
       %b Name:
@@ -54,6 +56,3 @@
 
 
 #nav
-  = link_to 'Edit', edit_flock_path(@flock)
-  \|
-  = link_to 'Back', flocks_path
