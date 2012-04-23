@@ -1,10 +1,10 @@
 class @Flock
   constructor: (@name, @avoid, @align, @center, @jitter, @goalseek, @boids, @boidsize, @width, @height ) ->
     
-  random_velocity: (scale) ->
+  _random_velocity: (scale) ->
     ((Math.random() + Math.random() + Math.random()) / 3 ) * scale - scale / 2
-  random_velocities: (scale) ->
-    (this.random_velocity(scale)  for i in [1.. @boids * 2])
+  _random_velocities: (scale) ->
+    (this._random_velocity(scale)  for i in [1.. @boids * 2])
   
   initialize: ->
     # params that need to be passed in, not hard coded:
@@ -16,17 +16,17 @@ class @Flock
     @running = 0
     @loopnum = 0
     @p = ((Math.random() * @width ) for i in [1.. @boids * 2])
-    @v = this.random_velocities(@maxv ) 
+    @v = this._random_velocities(@maxv ) 
     @r = new FlockCanvas( @width, @height )
     @r.initialize()
     this
-  draw_bird: (id) ->
+  _draw_bird: (id) ->
     idx = id * 2
     @r.draw_bird @p[idx], @p[idx+1], @boidsize / 2
     if @halo then @r.draw_halo @p[idx], @p[idx+1], @neighbor_cutoff 
     this
   draw: ->
-    ( this.draw_bird i ) for i in [0..(@boids-1)]
+    ( this._draw_bird i ) for i in [0..(@boids-1)]
     this
   redraw: ->
     @r.refresh()
@@ -136,7 +136,7 @@ class @Flock
         [@_center(),            @center,    'center'],
         [@_align(),             @align,     'align'], 
         [zeros,                 @goalseek,  'goalseek'],
-        [@random_velocities(1), @jitter,    'jitter'], 
+        [@_random_velocities(1), @jitter,    'jitter'], 
     ]
     @vpairs = new_vpairs
     #console.log @vpairs
@@ -166,18 +166,20 @@ class @Flock
     for i in [0..(@boids * 2 -1)]
       @p[i] = @_adjust(@p[i], @v[i], (if (i % 2 == 0) then @width else @height ) )
     this
-  frame: ->
+  _frame: ->
     return if @updating == 1 || @running == 0
     if @maxloops > 0
       return if @loopnum++  > @maxloops
     @updating = 1
-    this._update().redraw()
+    this.step()
     @updating = 0
+  step: ->
+    this._update().redraw()
   start: (loops = -1 ) ->
     @maxloops = loops
     unless @running > 0
       @running = 1
-      f = => @frame()
+      f = => @_frame()
       setInterval( f, 30)
     this
   stop: ->
