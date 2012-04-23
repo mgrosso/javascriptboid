@@ -1,5 +1,10 @@
-#debug 
 #flock 
+  #start.link start
+  #stop.link stop
+  #halo.link halo
+  #reset.link reset
+  #step.link step
+  #redraw.link redraw
   %canvas#cv{ width: @flock.width, height: @flock.height }
   %script
     != "window.flock = #{@flock.to_json};"
