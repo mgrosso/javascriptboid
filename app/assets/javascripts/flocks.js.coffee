@@ -6,6 +6,8 @@ class @Flock
   _random_velocities: (scale) ->
     (this._random_velocity(scale)  for i in [1.. @boids * 2])
   
+  offset: (o) ->
+    @r.offset = o
   toggle_component: (component) ->
     if @arrow_show[component]
         delete @arrow_show[component]

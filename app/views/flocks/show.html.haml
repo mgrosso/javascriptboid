@@ -53,6 +53,7 @@
   %script
     != "window.flock = #{@flock.to_json};"
     != "addLoadEvent(function(){window.flock_run = make_flock(window.flock).initialize().start();});"
+    != "addLoadEvent(function(){window.flock_run.offset($(\"#cv\").offset());});"
 
 
 #nav
