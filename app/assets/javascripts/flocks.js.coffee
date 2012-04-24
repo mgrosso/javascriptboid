@@ -24,7 +24,6 @@ class @Flock
       goalseek:"#aaaa00",
       jitter:  "#00aaaa",
       }
-    @arrow = 0
     @inertia = 0.9
     @maxv = @boidsize 
     @neighbor_cutoff = @boidsize * 10
@@ -221,11 +220,6 @@ class @Flock
     this
   stop: ->
     @running = 0
-  toggle_arrow: ->
-    if @arrow? and @arrow == 1
-      @arrow = 0 
-    else 
-      @arrow = 1
   toggle_halo: ->
     if @halo? and @halo == 1
       @halo = 0 
