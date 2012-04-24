@@ -238,10 +238,21 @@ class @Flock
         best = id
         shortest= len
     best
+  is_within: (id, x, y ) ->
+    ix = @p[id * 2]
+    iy = @p[id * 2 + 1]
+    dx = ix - x
+    dy = iy - y
+    diff2 = dx * dx + dy * dy
+    rad2 = (@boidsize/2) * ( @boidsize / 2)
+    console.log 'is_within', id, x, y, ix, iy, dx, dy, diff2, rad2 
+    diff2 < rad2
   click: (e) ->
     return unless @offset?
     x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(@offset.left)
     y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(@offset.top) + 1;
-    console.log x, y, @offset, e, @nearest(x,y)
+    near = @nearest(x,y)
+    within = @is_within(near,x,y)
+    console.log x, y, @offset, e, near, within
 
 
