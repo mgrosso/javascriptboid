@@ -2,7 +2,6 @@ class @FlockCanvas
   constructor: (@width, @height ) ->
     
   initialize: ->
-    $("#cv").bind  'click', (e) => @click( e)
     jqobj = $("#cv")
     @cnv = jqobj.get 0
     @cnv.width = @width
@@ -42,9 +41,4 @@ class @FlockCanvas
     this
   draw_bird: (x,y,size) -> 
     this.draw_circle x, y, size
-  click: (e) ->
-    return unless @offset?
-    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(@offset.left)
-    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(@offset.top) + 1;
-    console.log x, y, @offset, e
 

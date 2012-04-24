@@ -6,8 +6,6 @@ class @Flock
   _random_velocities: (scale) ->
     (this._random_velocity(scale)  for i in [1.. @boids * 2])
   
-  offset: (o) ->
-    @r.offset = o
   toggle_component: (component) ->
     if @arrow_show[component]
         delete @arrow_show[component]
@@ -15,6 +13,7 @@ class @Flock
         @arrow_show[component] = @arrow_colors[component]
   initialize: ->
     # params that need to be passed in, not hard coded:
+    $("#cv").bind  'click', (e) => @click( e)
     @arrow_show = { }
     @arrow_colors = {
       inertia: "#000000",
@@ -225,3 +224,24 @@ class @Flock
       @halo = 0 
     else 
       @halo = 1
+  nearest: (x,y) ->
+    shortest = @width * @width + @height * @height 
+    best = -1
+    for id in [0..(@boids - 1)] 
+      ix = @p[id * 2]
+      iy = @p[id * 2 + 1]
+      dx = @_pdelta( x, ix, @width)
+      dy = @_pdelta( y, iy, @height)
+      len = Math.sqrt( dx * dx + dy * dy )
+      console.log id, shortest, x, y, ix, iy, dx, dy, len
+      if len < shortest 
+        best = id
+        shortest= len
+    best
+  click: (e) ->
+    return unless @offset?
+    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(@offset.left)
+    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(@offset.top) + 1;
+    console.log x, y, @offset, e, @nearest(x,y)
+
+
