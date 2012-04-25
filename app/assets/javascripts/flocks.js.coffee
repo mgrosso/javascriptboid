@@ -106,6 +106,7 @@ class @Flock
         @xdeltas[j * @boids + i] = - xd
         @ydeltas[i * @boids + j] = yd
         @ydeltas[j * @boids + i] = - yd
+        if @debug then console.log 'distance:',i, j, d, xd, yd, @neighbors.get(i)
     @distances
   _distance: (i, j ) ->
     if i == j 
@@ -188,7 +189,8 @@ class @Flock
         [@_jitter(),            @jitter,    'jitter'], 
     ]
     @vpairs = new_vpairs
-    if @debug then console.log @vpairs
+    if @debug then console.log 'neighbors',@neighbors
+    if @debug then console.log 'forces:',@vpairs
     for id in [0..(@boids-1)]
       len = weight = x = y = 0
       for pair in @vpairs

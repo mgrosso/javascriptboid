@@ -43,6 +43,7 @@ class @FlockCanvas
     this.draw_circle x, y, size
   draw_bird_num: (x,y,id) -> 
     @ctx.textAlign = "center"
+    @ctx.font = "14pt Courier"
     @ctx.textBaseline = "middle"
     @ctx.fillStyle = "#000000"
     @ctx.fillText ""+id, x, y
