@@ -244,6 +244,8 @@ class @Flock
     dx = ix - x
     dy = iy - y
     ( dx * dx + dy * dy ) < ( @boidsize * @boidsize / 4 )
+  boid: (id) ->
+    { x: @p[id * 2], y: @p[id * 2 +1], vx: @p[id * 2], vy: @p[id * 2 +1] }
   click: (e) ->
     return unless @offset?
     x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(@offset.left)
