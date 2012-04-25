@@ -1,5 +1,16 @@
 %p#notice= notice
 #flock 
+  #header
+    %b Name:
+    = @flock.name
+    %b Width:
+    = @flock.width
+    %b Height:
+    = @flock.height
+    %b Boids:
+    = @flock.boids
+    %b Boidsize:
+    = @flock.boidsize
   #controls 
     %a#start.link Start
     %a#stop.link Stop
@@ -7,48 +18,26 @@
     %a#initialize.link Reset
     %a#step.link Step
     %a#redraw.link Redraw
+    %a#console_debug.link Console Debug
+    %a#show_numbers.link Show Numbers
     .link= link_to 'Edit', edit_flock_path(@flock)
     .link= link_to 'Back', flocks_path
   #details
-    %p
-      %b Name:
-      = @flock.name
-      |
     %p#avoid.link
       %b Avoid:
       = @flock.avoid
-      |
     %p#align.link
       %b Align:
       = @flock.align
-      |
     %p#center.link
       %b Center:
       = @flock.center
-      |
     %p#jitter.link
       %b Jitter:
       = @flock.jitter
-      |
     %p#goalseek.link
       %b Goalseek:
       = @flock.goalseek
-      |
-    %p
-      %b Boids:
-      = @flock.boids
-      |
-    %p
-      %b Boidsize:
-      = @flock.boidsize
-      |
-    %p
-      %b Width:
-      = @flock.width
-      |
-    %p
-      %b Height:
-      = @flock.height
   %canvas#cv{ width: @flock.width, height: @flock.height }
   %script
     != "window.flock = #{@flock.to_json};"

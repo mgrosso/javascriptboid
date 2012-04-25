@@ -14,9 +14,9 @@
     float: left; 
     clear: none; 
     margin: 0; 
-    padding: 1em 1em 1em 0em; 
+    margin: 0.5em 1em 0.5em 0em; 
     text-decoration: underline;
     }
 #controls { float: left; clear: both; overflow: auto; }
 #details { float: left; clear: both; }
-#details p { float: left; clear: none; padding: 0.5em 0.5em 0.5em 0em ;}
+#details p { float: left; clear: none; }
