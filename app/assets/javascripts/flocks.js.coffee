@@ -243,10 +243,7 @@ class @Flock
     iy = @p[id * 2 + 1]
     dx = ix - x
     dy = iy - y
-    diff2 = dx * dx + dy * dy
-    rad2 = (@boidsize/2) * ( @boidsize / 2)
-    console.log 'is_within', id, x, y, ix, iy, dx, dy, diff2, rad2 
-    diff2 < rad2
+    ( dx * dx + dy * dy ) < ( @boidsize * @boidsize / 4 )
   click: (e) ->
     return unless @offset?
     x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(@offset.left)
