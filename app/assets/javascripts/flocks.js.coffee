@@ -160,8 +160,8 @@ class @Flock
       x = y = 0
       for pair in pairs
         j = pair[1]
-        x = x + @vx[j]
-        y = y + @vx[j]
+        x = x + @_x(j)
+        y = y + @_y(j)
       sz = pairs.length
       ret[0][i] = x / sz
       ret[1][i] = y / sz
