@@ -15,20 +15,20 @@
   h['jitter']   =   Number(h['jitter'] )
   h['goalseek'] =   Number(h['goalseek'])
   f = new Flock( h['name'], h['avoid'], h['align'], h['center'], h['jitter'], h['goalseek'], h['boids'], h['boidsize'], h['width'], h['height'] )
+  #######################################################################
   $("#start").click => f.start()
   $("#stop").click => f.stop()
   $("#toggle_halo").click => f.toggle_halo()
   $("#initialize").click => f.initialize()
   $("#step").click => f.step()
   $("#redraw").click => f.redraw()
+  $("#console_debug").click => f.console_debug()
+  $("#show_numbers").click => f.toggle_numbers()
   #######################################################################
-  # fascinating: this passes in component in all the handlers.
-  # essentially the function is being determined at compile time not 
-  # run time.
-  #######################################################################
-  $('#avoid').click => f.toggle_component( 'avoid')
-  $('#align').click => f.toggle_component( 'align')
-  $('#center').click => f.toggle_component( 'center')
-  $('#jitter').click => f.toggle_component( 'jitter')
-  $('#goalseek').click => f.toggle_component( 'goalseek')
+  vcomp = (name) ->
+    $('#' + name).click => 
+        f.toggle_component( name )
+        $('#' + name).css({color: f.component_color( name )})
+  for component in ['avoid', 'align', 'center', 'jitter', 'goalseek' ]
+      vcomp component
   return f
