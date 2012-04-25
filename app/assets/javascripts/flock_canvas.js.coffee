@@ -41,4 +41,9 @@ class @FlockCanvas
     this
   draw_bird: (x,y,size) -> 
     this.draw_circle x, y, size
+  draw_bird_num: (x,y,id) -> 
+    @ctx.textAlign = "center"
+    @ctx.textBaseline = "middle"
+    @ctx.fillStyle = "#000000"
+    @ctx.fillText ""+id, x, y
 
