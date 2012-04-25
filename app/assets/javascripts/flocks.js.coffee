@@ -266,7 +266,7 @@ class @Flock
   is_within: (id, x, y ) ->
     dx = @_x(id) - x
     dy = @_y(id) - y
-    ( dx * dx + dy * dy ) < ( @boidsize * @boidsize / 4 )
+    ( dx * dx + dy * dy ) < ( @radius * @radius )
   bird: (id) ->
     ret = { x: @_x(id), y: @_y(id), vx: @_vx(id), vy: @_vy(id) }
     for component, color of @arrow_colors 
