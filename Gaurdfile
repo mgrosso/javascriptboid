@@ -1,0 +1,11 @@
+group 'js' do
+  guard 'jasmine' do
+    #example from http://metaskills.net/2012/01/16/rails-and-spine-js-jasmine-testing-part-1/
+    watch(%r{app/assets/javascripts/myapp/index\.js\.coffee$})  { "spec/javascripts" }
+    watch(%r{app/assets/javascripts/myapp/(.+)\.js\.coffee$})   { |m| "spec/javascripts/#{m[1]}_spec.js.coffee" }
+    watch(%r{spec/javascripts/(.+)_spec\.js\.coffee$})          { |m| "spec/javascripts/#{m[1]}_spec.js.coffee" }
+    watch(%r{spec/javascripts/spec\.js$})                       { "spec/javascripts" }
+    watch(%r{spec/javascripts/spec_helper\.js$})                { "spec/javascripts" }
+    watch(%r{spec/javascripts/jasmine-myapp.*})                 { "spec/javascripts" }
+  end
+end

@@ -17,6 +17,9 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'underscore-rails'
   gem 'backbone-rails'
+  gem 'jasmine', :git => "git://github.com/pivotal/jasmine-gem.git" 
+  gem 'jasminerice'
+  gem 'guard-jasmine'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platform => :ruby
