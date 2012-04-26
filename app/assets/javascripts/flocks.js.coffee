@@ -14,11 +14,10 @@ class @Flock
     else
         @arrow_show[component] = @arrow_colors[component]
   initialize: ->
-    # params that need to be passed in, not hard coded:
+    ###################################################
+    # things that belong someplace else
+    ###################################################
     $("#cv").bind  'click', (e) => @click( e)
-    @show_numbers = 0
-    @debug = 0
-    @arrow_show = { }
     @arrow_colors = {
       inertia: "#000000",
       avoid:   "#ff0000",
@@ -27,22 +26,43 @@ class @Flock
       goalseek:"#aaaa00",
       jitter:  "#00aaaa",
       }
+    ###################################################
+    # hardcoded params that need to be paramaterized
+    ###################################################
     @inertia = 0.9
     @maxv = @boidsize 
     @neighbor_cutoff = @boidsize * 10
     @avoid_cutoff = @boidsize * 2
     @max_neighbors = 4
     @radius = @boidsize / 2
+    ###################################################
     # state that changes
+    ###################################################
+    @arrow_show = { }
+    @show_numbers = 0
+    @debug = 0
     @running = 0
     @loopnum = 0
-    @px = ((Math.random() * @width ) for i in [1.. @boids])
-    @py = ((Math.random() * @width ) for i in [1.. @boids])
-    @vx = @_random_velocities(@maxv ) 
-    @vy = @_random_velocities(@maxv ) 
+    @px = []
+    @py = []
+    @vx = []
+    @vy = []
+    @add_random_bird() for i in [1.. @boids]
     @r = new FlockCanvas( @width, @height )
     @r.initialize()
     this
+  add_random_bird: ->
+    x = Math.random() * @width
+    y = Math.random() * @height
+    vx = @_random_velocity( @maxv )
+    vy = @_random_velocity( @maxv )
+    @add_bird(x,y,vx,vy)
+  add_bird: (x,y,vx,vy) ->
+    @px.push x
+    @py.push y
+    @vx.push vx
+    @vy.push vy
+    @px.length
   _x: (id) -> @px[id]
   _y: (id) -> @py[id]
   _vx: (id) -> @vx[id]
@@ -65,7 +85,7 @@ class @Flock
   redraw: ->
     @r.refresh()
     this.draw()
-  _adjust: ( p, delta, max ) ->
+  _move: ( p, delta, max ) ->
     ret = p + delta
     if ret < 0
       ret = max - ret
@@ -220,8 +240,8 @@ class @Flock
   _update: ->
     @_update_velocities()
     for i in [0..(@boids - 1)]
-      @px[i] = @_adjust(@_x(i), @_vx(i), @width )
-      @py[i] = @_adjust(@_y(i), @_vy(i), @height )
+      @px[i] = @_move(@_x(i), @_vx(i), @width )
+      @py[i] = @_move(@_y(i), @_vy(i), @height )
     this
   _frame: ->
     return if @updating == 1 || @running == 0
@@ -269,7 +289,7 @@ class @Flock
     dx = @_x(id) - x
     dy = @_y(id) - y
     ( dx * dx + dy * dy ) < ( @radius * @radius )
-  bird: (id) ->
+  get_bird: (id) ->
     ret = { x: @_x(id), y: @_y(id), vx: @_vx(id), vy: @_vy(id) }
     for component, color of @arrow_colors 
       ret[component] = @arrows[component][id]
@@ -280,6 +300,6 @@ class @Flock
     y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(@offset.top) + 1;
     near = @nearest(x,y)
     within = @is_within(near,x,y)
-    console.log x, y, @offset, e, near, within, @bird(near)
+    console.log x, y, @offset, e, near, within, @get_bird(near)
 
 
