@@ -18,7 +18,7 @@ group :assets do
   gem 'underscore-rails'
   gem 'backbone-rails'
   gem 'jasmine', :git => "git://github.com/pivotal/jasmine-gem.git" 
-  gem 'jasminerice'
+  gem 'jasminerice', :git => "https://github.com/bradphelan/jasminerice.git"
   gem 'guard-jasmine'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
