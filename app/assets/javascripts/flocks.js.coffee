@@ -302,4 +302,6 @@ class @Flock
     within = @is_within(near,x,y)
     console.log x, y, @offset, e, near, within, @get_bird(near)
 
+root = exports ? this
+root.Flock = Flock
 
