@@ -2,6 +2,7 @@
 #= require jquery_ujs
 #= require_tree ./
 #= require flock_canvas.js.coffee
+#= require flock_mock_viewer.js.coffee
 #= require flock_page.js.coffee
 #= require flocks.js.coffee
 #= require nearest.js.coffee
