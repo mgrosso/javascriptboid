@@ -1,5 +1,10 @@
-stop/start/reinitialize/draw_halo buttons
+DONE fix i*2+1
+DONE use @radius on line 253
+DONE _adjust _move
+DONE stop/start/reinitialize/draw_halo buttons
+DONE have a max speed, not one single speed for all
 
-have a max speed, not one single speed for all
-
+DONE add js unit testing framework
+add unit tests per each behavior
+fix "center should point to middle of two boids"
 goalseek
