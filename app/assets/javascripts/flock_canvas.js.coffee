@@ -14,6 +14,7 @@ class @FlockCanvas
     @ctx.closePath()
     @ctx.strokeStyle = "#232323"
     @ctx.stroke()
+    this
   draw_circle: (x,y,size) -> 
     @ctx.beginPath()
     @ctx.arc x, y, size, 0, @pi2, false
@@ -30,6 +31,7 @@ class @FlockCanvas
     @ctx.lineWidth = 1
     @ctx.strokeStyle = color
     @ctx.stroke()
+    this
   draw_rect: (x,y,size) -> 
     @ctx.lineWidth = 4
     @ctx.strokeStyle = "#4ed66f"
@@ -41,10 +43,12 @@ class @FlockCanvas
     this
   draw_bird: (x,y,size) -> 
     this.draw_circle x, y, size
+    this
   draw_bird_num: (x,y,id) -> 
     @ctx.textAlign = "center"
     @ctx.font = "14pt Courier"
     @ctx.textBaseline = "middle"
     @ctx.fillStyle = "#000000"
     @ctx.fillText ""+id, x, y
+    this
 
