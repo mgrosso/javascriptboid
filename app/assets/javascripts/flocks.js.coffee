@@ -48,7 +48,8 @@ class @Flock
     @vx = []
     @vy = []
     @add_random_bird() for i in [1.. @boids]
-    @r = new FlockCanvas( @width, @height )
+    @view ||= FlockCanvas
+    @r = new @view( @width, @height )
     @r.initialize()
     this
   add_random_bird: ->
@@ -63,6 +64,7 @@ class @Flock
     @vx.push vx
     @vy.push vy
     @px.length
+    this
   _x: (id) -> @px[id]
   _y: (id) -> @py[id]
   _vx: (id) -> @vx[id]
