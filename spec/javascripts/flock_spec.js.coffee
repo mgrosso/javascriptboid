@@ -85,3 +85,24 @@ describe window.Flock, ->
     expect(flock.get_frame_bird_pixel(0,0)).
         not.toEqual(flock.get_frame_bird_pixel(1,0))
   
+  it "knows which are birds within max_distance of which", ->
+    window.flock = flock = make_test_flock() 
+    flock.console_debug()
+    flock.set_bird 1, 450, 450, 0, 0
+    flock.add_bird 650, 650, 0, 0
+    flock.start(1)
+    console.log flock.neighbors
+    nbrs0 = _(flock.neighbors.get(0)).map (x) -> x[1]
+    nbrs1 = _(flock.neighbors.get(1)).map (x) -> x[1]
+    nbrs2 = _(flock.neighbors.get(2)).map (x) -> x[1]
+    console.log nbrs0, nbrs1, nbrs2
+    expect(nbrs0).not.toContain(0)
+    expect(nbrs0).toContain(1)
+    expect(nbrs0).not.toContain(2)
+    expect(nbrs1).toContain(0)
+    expect(nbrs1).not.toContain(1)
+    expect(nbrs1).not.toContain(2)
+    expect(nbrs2).not.toContain(0)
+    expect(nbrs2).not.toContain(1)
+    expect(nbrs2).not.toContain(2)
+  
