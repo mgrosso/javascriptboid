@@ -79,8 +79,8 @@ describe window.Flock, ->
 
   it "does align on neighbor", ->
     window.flock = flock = make_test_flock {align: 1}
-    #flock.console_debug()
-    flock.set_bird 1, 450, 450, 0, 0
+    flock.console_debug()
+    flock.set_bird 1, 450, 450, 10, 10
     flock.start(1)
     expect(flock.get_frame_bird_pixel(0,0)).
         not.toEqual(flock.get_frame_bird_pixel(1,0))
@@ -98,3 +98,27 @@ describe window.Flock, ->
     expect(nbrs1).toEqual([0])
     expect(nbrs2).toEqual([])
   
+  it "centers to the center", ->
+    window.flock = f = make_test_flock {center: 1}
+    #diamond shape
+    f.set_bird 0, 400, 450, 0, 0
+    f.set_bird 1, 450, 400, 0, 0
+    f.add_bird    500, 450, 0, 0
+    f.add_bird    450, 500, 0, 0
+    f.start(1)
+    expect(f.get_frame_bird_px(1,0)).toBeGreaterThan(400)
+    expect(f.get_frame_bird_vx(1,0)).toBeGreaterThan(0)
+    expect(f.get_frame_bird_py(1,0)).toEqual(0)
+    expect(f.get_frame_bird_vy(1,0)).toEqual(0)
+    expect(f.get_frame_bird_px(1,1)).toEqual(450)
+    expect(f.get_frame_bird_vx(1,1)).toEqual(0)
+    expect(f.get_frame_bird_py(1,1)).toBeGreaterThan(400)
+    expect(f.get_frame_bird_vy(1,1)).toBeGreaterThan(0)
+    expect(f.get_frame_bird_px(1,2)).toBeLessThan(500)
+    expect(f.get_frame_bird_vx(1,2)).toBeLessThan(0)
+    expect(f.get_frame_bird_py(1,2)).toEqual(0)
+    expect(f.get_frame_bird_vy(1,2)).toEqual(0)
+    expect(f.get_frame_bird_px(1,3)).toEqual(450)
+    expect(f.get_frame_bird_vx(1,3)).toEqual(0)
+    expect(f.get_frame_bird_py(1,3)).toBeLessThan(400)
+    expect(f.get_frame_bird_vy(1,3)).toBeLessThan(0)

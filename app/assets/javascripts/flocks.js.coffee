@@ -65,13 +65,13 @@ class @Flock
     this
   get_frame_bird_pixel: ( frame, bird ) ->
     '{' + @history[frame][0][bird] + ',' + @history[frame][1][bird] + '}'
-  get_frame_bird_px = ( frame, bird ) ->
+  get_frame_bird_px: ( frame, bird ) ->
     @history[frame][0][bird]
-  get_frame_bird_py = ( frame, bird ) ->
+  get_frame_bird_py: ( frame, bird ) ->
     @history[frame][1][bird]
-  get_frame_bird_vx = ( frame, bird ) ->
+  get_frame_bird_vx: ( frame, bird ) ->
     @history[frame][2][bird]
-  get_frame_bird_vy = ( frame, bird ) ->
+  get_frame_bird_vy: ( frame, bird ) ->
     @history[frame][3][bird]
   add_random_bird: ->
     x = Math.random() * @width
@@ -105,7 +105,7 @@ class @Flock
   _draw_bird: (id) ->
     x = @_x(id)
     y = @_y(id)
-    @r.draw_bird x,y,@radius,id
+    if ! @show_numbers then @r.draw_bird x,y,@radius,id
     if @halo 
       @r.draw_halo x, y, @neighbor_cutoff 
       @r.draw_halo x, y, @avoid_cutoff 
@@ -152,11 +152,12 @@ class @Flock
     @xdeltas   = []
     @ydeltas   = []
     for i in [0..(@boids-1)]
-      for j in [0..(@boids-1)] when j != i
+      for j in [0..(@boids-1)] when j > i
         xd = @_pdelta( @_x(i), @_x(j), @width )
         yd = @_pdelta( @_y(i), @_y(j), @height )
         d = @distances[ i * @boids + j ] = Math.sqrt( xd * xd + yd * yd )
         @neighbors.add d, i, j
+        @neighbors.add d, j, i
         @xdeltas[i * @boids + j] = xd
         @xdeltas[j * @boids + i] = - xd
         @ydeltas[i * @boids + j] = yd
@@ -205,6 +206,7 @@ class @Flock
         w = 1 / pair[0]
         j = pair[1]
         weight = weight + w
+        if @debug then console.log i, j, pair[0], w, x, y, @vx[j], @vy[j]
         x = x + w * @vx[j]
         y = y + w * @vy[j]
       ret[0][i] = if weight == 0 then 0 else x / weight
@@ -213,14 +215,14 @@ class @Flock
   _center: ->
     ret = @_xy_zeros()
     for i, pairs of @neighbors.all()
-      x = y = 0
+      xd = yd = 0
       for pair in pairs
         j = pair[1]
-        x = x + @_x(j)
-        y = y + @_y(j)
+        xd = xd + @_pdelta( @_x(i), @_x(j), @width )
+        yd = yd + @_pdelta( @_y(i), @_y(j), @height )
       sz = pairs.length
-      ret[0][i] = x / sz
-      ret[1][i] = y / sz
+      ret[0][i] = xd / sz
+      ret[1][i] = yd / sz
     ret
   _jitter: ->
     [@_random_velocities(1), @_random_velocities(1) ]
