@@ -152,7 +152,7 @@ class @Flock
     @xdeltas   = []
     @ydeltas   = []
     for i in [0..(@boids-1)]
-      for j in [0..(@boids-1)] when j > i
+      for j in [0..(@boids-1)] when j != i
         xd = @_pdelta( @_x(i), @_x(j), @width )
         yd = @_pdelta( @_y(i), @_y(j), @height )
         d = @distances[ i * @boids + j ] = Math.sqrt( xd * xd + yd * yd )
