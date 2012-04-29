@@ -215,14 +215,14 @@ class @Flock
   _center: ->
     ret = @_xy_zeros()
     for i, pairs of @neighbors.all()
-      xd = yd = 0
-      for pair in pairs
-        j = pair[1]
-        xd = xd + @_pdelta( @_x(i), @_x(j), @width )
-        yd = yd + @_pdelta( @_y(i), @_y(j), @height )
       sz = pairs.length
-      ret[0][i] = xd / sz
-      ret[1][i] = yd / sz
+      if sz == 0
+        ret[0][i] = ret[1][i] = 0
+      else
+        fx=(m,a)=>m=m+@_pdelta(@_x(a[1]),@_x(i),@width)
+        fy=(m,a)=>m=m+@_pdelta(@_y(a[1]),@_y(i),@height)
+        ret[0][i] = _(pairs).reduce( fx, 0 ) / sz
+        ret[1][i] = _(pairs).reduce( fy, 0 ) / sz
     ret
   _jitter: ->
     [@_random_velocities(1), @_random_velocities(1) ]
