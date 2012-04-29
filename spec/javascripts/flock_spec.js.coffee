@@ -1,5 +1,5 @@
 describe window.Flock, -> 
-  make_test_flock = ( h = {} ) -> 
+  make_args = (h = {}) ->
     h['inertia']   ||= 0
     h['avoid']     ||= 0
     h['align']     ||= 0
@@ -12,15 +12,20 @@ describe window.Flock, ->
     h['width']     ||= 1000
     h['height']    ||= 1000
     h['store_history']    ||= true
-    flock = make_flock h
+    h
+
+  make_test_flock = ( h = {} ) -> 
+    h = make_args h
+    flock = new Flock( h['name'], h['avoid'], h['align'], h['center'], h['jitter'], h['goalseek'], h['boids'], h['boidsize'], h['width'], h['height'], h['store_history'] )
     flock.view = FlockMockViewer
     flock.initialize()
     flock.add_bird 400, 400, 0, 0
-    flock.add_bird 500, 500, 0, 0
+    flock.add_bird 450, 450, 0, 0
     flock
 
   two_birds_one_frame = ( h = {} ) ->
     window.flock = make_test_flock h
+    window.flock.console_debug()
     window.flock.start(1)
  
   it "can be constructed", ->
@@ -35,6 +40,7 @@ describe window.Flock, ->
     flock = two_birds_one_frame()
     expect(flock.loopnum).toEqual(1)
     expect(flock.history.length).toEqual(2)
+
   it "has three frames after two updates", ->
     flock = make_test_flock()
     flock.start(2)
@@ -45,3 +51,37 @@ describe window.Flock, ->
     flock = two_birds_one_frame()
     expect(flock.get_frame_bird_pixel(0,0)).
         toEqual(flock.get_frame_bird_pixel(1,0))
+
+  it "does not center on non-neighbor", ->
+    window.flock = flock = make_test_flock {center: 1}
+    flock.console_debug()
+    flock.set_bird 1, 500, 500, 0, 0
+    flock.start(1)
+    expect(flock.get_frame_bird_pixel(0,0)).
+        toEqual(flock.get_frame_bird_pixel(1,0))
+
+  it "does not align on non-neighbor", ->
+    window.flock = flock = make_test_flock {align: 1}
+    flock.console_debug()
+    flock.set_bird 1, 500, 500, 0, 0
+    flock.start(1)
+    expect(flock.get_frame_bird_pixel(0,0)).
+        toEqual(flock.get_frame_bird_pixel(1,0))
+  
+
+  it "does center on neighbor", ->
+    window.flock = flock = make_test_flock {center: 1}
+    flock.console_debug()
+    flock.set_bird 1, 450, 450, 0, 0
+    flock.start(1)
+    expect(flock.get_frame_bird_pixel(0,0)).
+        not.toEqual(flock.get_frame_bird_pixel(1,0))
+
+  it "does align on neighbor", ->
+    window.flock = flock = make_test_flock {align: 1}
+    flock.console_debug()
+    flock.set_bird 1, 450, 450, 0, 0
+    flock.start(1)
+    expect(flock.get_frame_bird_pixel(0,0)).
+        not.toEqual(flock.get_frame_bird_pixel(1,0))
+  

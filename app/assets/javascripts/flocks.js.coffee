@@ -79,6 +79,15 @@ class @Flock
     vx = @_random_velocity( @maxv )
     vy = @_random_velocity( @maxv )
     @add_bird(x,y,vx,vy)
+  set_bird: (id,x,y,vx,vy) ->
+    @px[id] = x
+    @py[id] = y
+    @vx[id] = vx
+    @vy[id] = vy
+    if( @px.length > @boids )
+        ++ @boids
+    if @debug then console.log 'set_bird', @px.length, @boids, x, y
+    @px.length
   add_bird: (x,y,vx,vy) ->
     @px.push x
     @py.push y
