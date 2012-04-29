@@ -5,16 +5,18 @@
   h['center']    ||= 1
   h['jitter']    ||= 1
   h['goalseek']  ||= 1
-  h['boids']     ||= 10
+  if( ! h['boids']? )
+      h['boids'] = 10 
   h['boidsize']  ||= 30
   h['width']     ||= 500
   h['height']    ||= 500
+  h['store_history']    ||= false
   h['avoid']    =   Number(h['avoid'] )
   h['align']    =   Number(h['align'] )
   h['center']   =   Number(h['center'] )
   h['jitter']   =   Number(h['jitter'] )
   h['goalseek'] =   Number(h['goalseek'])
-  f = new Flock( h['name'], h['avoid'], h['align'], h['center'], h['jitter'], h['goalseek'], h['boids'], h['boidsize'], h['width'], h['height'] )
+  f = new Flock( h['name'], h['avoid'], h['align'], h['center'], h['jitter'], h['goalseek'], h['boids'], h['boidsize'], h['width'], h['height'], h['store_history'] )
   #######################################################################
   $("#start").click => f.start()
   $("#stop").click => f.stop()

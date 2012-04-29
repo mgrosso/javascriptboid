@@ -1,5 +1,5 @@
 class @Flock
-  constructor: (@name, @avoid, @align, @center, @jitter, @goalseek, @boids, @boidsize, @width, @height ) ->
+  constructor: (@name, @avoid, @align, @center, @jitter, @goalseek, @boids, @boidsize, @width, @height, @store_history ) ->
     
   _random_velocity: (scale) ->
     ((Math.random() + Math.random() + Math.random()) / 3 ) * scale - scale / 2
@@ -47,11 +47,32 @@ class @Flock
     @py = []
     @vx = []
     @vy = []
-    @add_random_bird() for i in [1.. @boids]
+    if(@boids > 0 )
+        @add_random_bird() for i in [0.. @boids - 1]
     @view ||= FlockCanvas
     @r = new @view( @width, @height )
     @r.initialize()
     this
+  _store_history: ->
+    if(@store_history)
+        @history ||= []
+        @history[@loopnum] =  [
+            @px.slice(0),
+            @py.slice(0),
+            @vx.slice(0),
+            @vy.slice(0) 
+            ]
+    this
+  get_frame_bird_pixel: ( frame, bird ) ->
+    '{' + @history[frame][0][bird] + ',' + @history[frame][1][bird] + '}'
+  get_frame_bird_px = ( frame, bird ) ->
+    @history[frame][0][bird]
+  get_frame_bird_py = ( frame, bird ) ->
+    @history[frame][1][bird]
+  get_frame_bird_vx = ( frame, bird ) ->
+    @history[frame][2][bird]
+  get_frame_bird_vy = ( frame, bird ) ->
+    @history[frame][3][bird]
   add_random_bird: ->
     x = Math.random() * @width
     y = Math.random() * @height
@@ -63,8 +84,11 @@ class @Flock
     @py.push y
     @vx.push vx
     @vy.push vy
+    if( @px.length > @boids )
+        ++ @boids
+    if @debug then console.log 'add_bird', @px.length, @boids, x, y
     @px.length
-    this
+  num_birds: -> @px.length
   _x: (id) -> @px[id]
   _y: (id) -> @py[id]
   _vx: (id) -> @vx[id]
@@ -78,7 +102,7 @@ class @Flock
       @r.draw_halo x, y, @avoid_cutoff 
     for key, color of @arrow_show
       xy2 = @arrows[key][id]
-      @r.draw_line x, y, x + 10 * xy2[0], y + 10 * xy2[1], color
+      @r.draw_line x, y, x + xy2[0], y + xy2[1], color
     if @show_numbers then @r.draw_bird_num x, y, id
     this
   draw: ->
@@ -240,17 +264,23 @@ class @Flock
       @arrows[ 'velocity' ][ id ] = [ x, y ]
     this
   _update: ->
+    @_store_history() if(@store_history and !@history)
     @_update_velocities()
+    pxnew = []
+    pynew = []
     for i in [0..(@boids - 1)]
-      @px[i] = @_move(@_x(i), @_vx(i), @width )
-      @py[i] = @_move(@_y(i), @_vy(i), @height )
+      pxnew[i] = @_move(@_x(i), @_vx(i), @width )
+      pynew[i] = @_move(@_y(i), @_vy(i), @height )
+    @px = pxnew
+    @py = pynew
     this
   _frame: ->
     return if @updating == 1 || @running == 0
-    if @maxloops > 0
-      return if @loopnum++  > @maxloops
+    return if @loopnum  >= @maxloops && @maxloops > 0
     @updating = 1
     @step()
+    @loopnum++
+    @_store_history() if(@store_history)
     @updating = 0
   toggle_numbers: ->
     @show_numbers = if @show_numbers then 0 else 1
@@ -266,8 +296,11 @@ class @Flock
     @maxloops = loops
     unless @running > 0
       @running = 1
-      f = => @_frame()
-      setInterval( f, 30)
+      if loops == -1 
+        f = => @_frame()
+        setInterval( f, 30)
+      else
+        @_frame() for frame in [0..loops]
     this
   stop: ->
     @running = 0
