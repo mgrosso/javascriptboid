@@ -13,13 +13,15 @@ gem 'pg'
 gem 'haml-rails'
 gem 'inherited_resources'
 
+gem 'underscore-rails'
+gem 'backbone-rails'
+gem 'jquery-rails'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-  gem 'underscore-rails'
-  gem 'backbone-rails'
   gem 'jasmine', :git => "git://github.com/pivotal/jasmine-gem.git" 
   gem 'jasminerice', :git => "https://github.com/bradphelan/jasminerice.git"
   gem 'guard-jasmine'
@@ -29,8 +31,6 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
 end
-
-gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
