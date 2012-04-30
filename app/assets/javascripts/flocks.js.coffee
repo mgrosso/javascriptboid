@@ -29,6 +29,7 @@ class @Flock
     ###################################################
     # hardcoded params that need to be paramaterized
     ###################################################
+    @interval = 50
     @inertia = 0.9
     @maxv = @boidsize 
     @neighbor_cutoff = @boidsize * 10
@@ -308,11 +309,20 @@ class @Flock
     unless @running > 0
       @running = 1
       if loops == -1 
-        f = => @_frame()
-        setInterval( f, 500)
+        @set_interval(@interval)
       else
         @_frame() for frame in [0..loops]
     this
+  slower:  ->
+    @set_interval( Math.floor( @interval * 1.5))
+  faster:  ->
+    @set_interval( Math.floor( @interval * 0.66))
+  set_interval: (milliseconds) ->
+    @interval = milliseconds
+    f = => @_frame()
+    if(@interval_id)
+      clearInterval @interval_id
+    @interval_id = setInterval( f, @interval)
   stop: ->
     @running = 0
   toggle_halo: ->

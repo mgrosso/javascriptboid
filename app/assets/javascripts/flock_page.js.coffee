@@ -26,6 +26,8 @@
   $("#redraw").click => f.redraw()
   $("#console_debug").click => f.console_debug()
   $("#show_numbers").click => f.toggle_numbers()
+  $("#slower").click => f.slower()
+  $("#faster").click => f.faster()
   #######################################################################
   vcomp = (name) ->
     $('#' + name).click => 
