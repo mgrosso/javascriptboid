@@ -309,7 +309,7 @@ class @Flock
       @running = 1
       if loops == -1 
         f = => @_frame()
-        setInterval( f, 30)
+        setInterval( f, 500)
       else
         @_frame() for frame in [0..loops]
     this
