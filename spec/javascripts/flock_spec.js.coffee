@@ -78,12 +78,16 @@ describe window.Flock, ->
         not.toEqual(flock.get_frame_bird_pixel(1,0))
 
   it "does align on neighbor", ->
-    window.flock = flock = make_test_flock {align: 1}
-    flock.console_debug()
-    flock.set_bird 1, 450, 450, 10, 10
-    flock.start(1)
-    expect(flock.get_frame_bird_pixel(0,0)).
-        not.toEqual(flock.get_frame_bird_pixel(1,0))
+    window.flock = f = make_test_flock {align: 1}
+    #f.console_debug()
+    f.set_bird 1, 450, 450, -10, -10
+    f.start(1)
+    expect(f.get_frame_bird_pixel(0,0)).
+        not.toEqual(f.get_frame_bird_pixel(1,0))
+    expect(f.get_frame_bird_vx(1,0)).toBeLessThan(0)
+    expect(f.get_frame_bird_vy(1,0)).toBeLessThan(0)
+    expect(f.get_frame_bird_vx(1,1)).toBeGreaterThan(-10)
+    expect(f.get_frame_bird_vy(1,1)).toBeGreaterThan(-10)
   
   it "knows which are birds within max_distance of which", ->
     window.flock = flock = make_test_flock() 
