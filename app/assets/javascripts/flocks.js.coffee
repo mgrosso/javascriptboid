@@ -286,8 +286,8 @@ class @Flock
         # where birds are bounce away and back towards
         # each other 
         ################################################
-        newx = ( x - vxprev ) * shrink + Math.random()
-        newy = ( y - vyprev ) * shrink + Math.random()
+        newx = ( x - vxprev ) * shrink + Math.random() - 0.5
+        newy = ( y - vyprev ) * shrink + Math.random() - 0.5
         if @debug then console.log 'maxa',change_len, @maxa, shrink, x, y, vxprev, vyprev, newx, newy
         x = newx
         y = newy
