@@ -105,10 +105,12 @@ describe window.Flock, ->
   it "centers to the center", ->
     window.flock = f = make_test_flock {center: 1}
     #diamond shape
+    #f.console_debug()
     f.set_bird 0, 400, 450, 0, 0
     f.set_bird 1, 450, 400, 0, 0
     f.add_bird    500, 450, 0, 0
     f.add_bird    450, 500, 0, 0
+    f.maxa = f.maxv * 2 + 1
     f.start(1)
     expect(f.get_frame_bird_px(1,0)).toBeGreaterThan(400)
     expect(f.get_frame_bird_vx(1,0)).toBeGreaterThan(0)
