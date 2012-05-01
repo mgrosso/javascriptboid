@@ -34,7 +34,7 @@ class @Flock
     @maxv = @boidsize 
     @neighbor_cutoff = @boidsize * 10
     @avoid_cutoff = @boidsize * 2
-    @max_neighbors = 4
+    @max_neighbors = -1
     @radius = @boidsize / 2
     ###################################################
     # state that changes
