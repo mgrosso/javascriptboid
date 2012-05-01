@@ -207,7 +207,7 @@ class @Flock
         w = 1 / pair[0]
         j = pair[1]
         weight = weight + w
-        if @debug then console.log i, j, pair[0], w, x, y, @vx[j], @vy[j]
+        #if @debug then console.log '_align:', i, j, pair[0], w, x, y, @vx[j], @vy[j]
         x = x + w * @vx[j]
         y = y + w * @vy[j]
       ret[0][i] = if weight == 0 then 0 else x / weight
@@ -253,7 +253,7 @@ class @Flock
       len = weight = x = y = 0
       for pair in @vpairs
         @arrows[ pair[2] ][ id ] = [ 0, 0 ]
-        if @debug then console.log 'update', id, pair[2], 'len,maxv=',len, @maxv
+        if @debug then console.log 'update_a', id, pair[2], 'len,maxv=',len, @maxv
         continue if len >= @maxv
         ar= pair[0]
         w = pair[1]
@@ -261,16 +261,17 @@ class @Flock
         dx = ar[0][id] * w
         dy = ar[1][id] * w
         delta_len = Math.sqrt( dx * dx + dy * dy )
-        if @debug then console.log 'update', id, pair[2], 'dx,dy,w:', dx, dy, w, 'arX[id],arY[id]=', ar[0][id], ar[1][id], 'x,y=', x, y, 'len, delta_len', len, delta_len
+        if @debug then console.log 'update_b', id, pair[2], 'dx,dy,w:', dx, dy, w, 'arX[id],arY[id]=', ar[0][id], ar[1][id], 'x,y=', x, y, 'len, delta_len', len, delta_len
         if delta_len + len > @maxv
           delta_len = @maxv - len
           dx = dx / delta_len
           dy = dy / delta_len
-          if @debug then console.log 'update', id, pair[2], delta_len, dx, dy
+          if @debug then console.log 'update_c', id, pair[2], delta_len, dx, dy
         x = x + dx
         y = y + dy
-        if @debug then console.log 'update', id, pair[2], 'x,y,dx,dy:', x,y, dx, dy
+        if @debug then console.log 'update_d', id, pair[2], 'x,y,dx,dy:', x,y, dx, dy
         @arrows[ pair[2] ][ id ] = [ dx, dy ]
+      if @debug then console.log 'update_e', id, pair[2], 'x,y,dx,dy:', x,y, dx, dy
       @vx[id] = x
       @vy[id] = y
       @arrows[ 'velocity' ][ id ] = [ x, y ]
