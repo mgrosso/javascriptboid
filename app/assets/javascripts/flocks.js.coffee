@@ -281,6 +281,11 @@ class @Flock
       if @debug then console.log 'change_len',change_len, @maxa, x, y, vxprev, vyprev 
       if( change_len > @maxa )
         shrink = @maxa / change_len
+        ################################################
+        # some random juice is needed to avoid 2 cycles
+        # where birds are bounce away and back towards
+        # each other 
+        ################################################
         newx = ( x - vxprev ) * shrink + Math.random()
         newy = ( y - vyprev ) * shrink + Math.random()
         if @debug then console.log 'maxa',change_len, @maxa, shrink, x, y, vxprev, vyprev, newx, newy
