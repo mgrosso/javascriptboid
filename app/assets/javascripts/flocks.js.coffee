@@ -32,6 +32,7 @@ class @Flock
     @interval = 50
     @inertia = 0.9
     @maxv = @boidsize 
+    @maxa = @maxv * 0.3
     @neighbor_cutoff = @boidsize * 10
     @avoid_cutoff = @boidsize * 2
     @max_neighbors = -1
@@ -272,6 +273,20 @@ class @Flock
         if @debug then console.log 'update_d', id, pair[2], 'x,y,dx,dy:', x,y, dx, dy
         @arrows[ pair[2] ][ id ] = [ dx, dy ]
       if @debug then console.log 'update_e', id, pair[2], 'x,y,dx,dy:', x,y, dx, dy
+      vxprev = @vx[id]
+      vyprev = @vy[id]
+      change_len = Math.sqrt( 
+        (vxprev - x)* (vxprev - x) + 
+        (vyprev - y)* (vyprev - y) ) 
+      if @debug then console.log 'change_len',change_len, @maxa, x, y, vxprev, vyprev 
+      if( change_len > @maxa )
+        shrink = @maxa / change_len
+        newx = ( x - vxprev ) * shrink + Math.random()
+        newy = ( y - vyprev ) * shrink + Math.random()
+        if @debug then console.log 'maxa',change_len, @maxa, shrink, x, y, vxprev, vyprev, newx, newy
+        x = newx
+        y = newy
+      if @debug then console.log 'update_f', id, pair[2], 'x,y,dx,dy:', x,y, dx, dy
       @vx[id] = x
       @vy[id] = y
       @arrows[ 'velocity' ][ id ] = [ x, y ]
