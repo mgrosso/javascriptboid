@@ -81,6 +81,7 @@ describe window.Flock, ->
     window.flock = f = make_test_flock {align: 1}
     #f.console_debug()
     f.set_bird 1, 450, 450, -10, -10
+    f.maxa = f.maxv * 2 + 1
     f.start(1)
     expect(f.get_frame_bird_pixel(0,0)).
         not.toEqual(f.get_frame_bird_pixel(1,0))
