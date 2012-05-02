@@ -159,7 +159,7 @@ describe window.Flock, ->
     h = { center: 1, width: 415, height: 1000 }
     window.flock = f = make_test_flock h
     #diamond shape
-    f.console_debug()
+    #f.console_debug()
     f.set_bird 0, 400, 450, 0, 0
     f.set_bird 1, 40,  400, 0, 0
     f.add_bird    90,  450, 0, 0
