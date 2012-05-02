@@ -8,7 +8,8 @@
     = stylesheet_link_tag    "application", :media => "all"
     = csrf_meta_tags
   %body
-    = yield
+    %div{ id: "#{params[:controller]}_#{params[:action]}", class: [ "outermost", params[:controller], params[:action] ] }
+      = yield
     = javascript_include_tag "application"
     :javascript
       $(document).ready(function(){
