@@ -37,12 +37,16 @@ class @Flock
     @avoid_cutoff = @boidsize * 4
     @max_neighbors = -1
     @radius = @boidsize / 2
+    @line_scale = 10
     ###################################################
-    # state that changes
+    # state that changes from user actions
     ###################################################
     @arrow_show = { }
     @show_numbers = 0
     @debug = 0
+    ###################################################
+    # state that changes just from running it
+    ###################################################
     @running = 0
     @loopnum = 0
     @px = []
@@ -113,7 +117,7 @@ class @Flock
       @r.draw_halo x, y, @avoid_cutoff 
     for key, color of @arrow_show
       xy2 = @arrows[key][id]
-      @r.draw_line x, y, x + xy2[0], y + xy2[1], color
+      @r.draw_line x, y, x + @line_scale * xy2[0], y + @line_scale * xy2[1], color
     if @show_numbers then @r.draw_bird_num x, y, id
     this
   draw: ->
