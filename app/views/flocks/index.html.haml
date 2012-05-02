@@ -14,7 +14,6 @@
     %th Height
     %th
     %th
-    %th
 
   - @flocks.each do |flock|
     %tr
@@ -29,8 +28,6 @@
       %td= flock.width
       %td= flock.height
       %td= link_to 'Show', flock
-      %td= link_to 'Edit', edit_flock_path(flock)
-      %td= link_to 'Destroy', flock, :confirm => 'Are you sure?', :method => :delete
 
 %br
 
