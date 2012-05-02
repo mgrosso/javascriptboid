@@ -137,7 +137,7 @@ class @Flock
     Math.sqrt( a * a + b * b )
   _pdelta: (a1, a2, size ) ->
     d1 = a1 - a2
-    d2 = size + a2 - a1
+    d2 = size + Math.min( a1 - a2, a2 - a1 )
     ret = if Math.abs(d1) < Math.abs(d2) then d1 else d2
   _norm: (x, y) ->
     if x==0 and y==0 
