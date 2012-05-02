@@ -32,7 +32,7 @@ class @Flock
     @interval = 50
     @inertia = 0.9
     @maxv = @boidsize 
-    @maxa = @maxv * 0.1
+    @maxa = @maxv * 0.4
     @neighbor_cutoff = @boidsize * 10
     @avoid_cutoff = @boidsize * 4
     @max_neighbors = -1
