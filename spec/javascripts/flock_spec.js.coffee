@@ -25,7 +25,7 @@ describe window.Flock, ->
 
   two_birds_one_frame = ( h = {} ) ->
     window.flock = make_test_flock h
-    window.flock.console_debug()
+    #window.flock.console_debug()
     window.flock.start(1)
  
   it "can be constructed", ->
@@ -102,6 +102,25 @@ describe window.Flock, ->
     expect(nbrs0).toEqual([1])
     expect(nbrs1).toEqual([0])
     expect(nbrs2).toEqual([])
+
+  it "finds neighbors over the wrap around edge", ->
+    h = { center: 1, width: 410, height: 1000 }
+    window.flock = f = make_test_flock h
+    #diamond shape
+    #f.console_debug()
+    f.set_bird 0, 400, 450, 0, 0
+    f.set_bird 1, 40,  400, 0, 0
+    f.add_bird    90,  450, 0, 0
+    f.add_bird    40,  500, 0, 0
+    flock.start(1)
+    nbrs0 = _(flock.neighbors.get(0)).map (x) -> x[1]
+    nbrs1 = _(flock.neighbors.get(1)).map (x) -> x[1]
+    nbrs2 = _(flock.neighbors.get(2)).map (x) -> x[1]
+    nbrs3 = _(flock.neighbors.get(3)).map (x) -> x[1]
+    expect(nbrs0).toEqual([1,2,3])
+    expect(nbrs1).toEqual([0,2,3])
+    expect(nbrs2).toEqual([0,1,3])
+    expect(nbrs3).toEqual([0,1,2])
   
   it "centers to the center", ->
     window.flock = f = make_test_flock {center: 1}
@@ -129,3 +148,38 @@ describe window.Flock, ->
     expect(f.get_frame_bird_vx(1,3)).toEqual(0)
     expect(f.get_frame_bird_py(1,3)).toBeLessThan(500)
     expect(f.get_frame_bird_vy(1,3)).toBeLessThan(0)
+  
+  it "figures torus distances correctly", ->
+    f = make_test_flock()
+    #f.console_debug()
+    expect(f._pdelta(90,10,100)).toEqual(20)
+    expect(f._pdelta(11,90,100)).toEqual(21)
+
+  it "centers to the center over an edge", ->
+    h = { center: 1, width: 415, height: 1000 }
+    window.flock = f = make_test_flock h
+    #diamond shape
+    f.console_debug()
+    f.set_bird 0, 400, 450, 0, 0
+    f.set_bird 1, 40,  400, 0, 0
+    f.add_bird    90,  450, 0, 0
+    f.add_bird    40,  500, 0, 0
+    f.maxv = 3
+    f.maxa = f.maxv * 100
+    f.start(1)
+    expect(f.get_frame_bird_px(1,0)).toBeGreaterThan(400)
+    expect(f.get_frame_bird_vx(1,0)).toBeGreaterThan(0)
+    expect(f.get_frame_bird_py(1,0)).toEqual(450)
+    expect(f.get_frame_bird_vy(1,0)).toEqual(0)
+    #expect(f.get_frame_bird_px(1,1)).toEqual(450)
+    #expect(f.get_frame_bird_vx(1,1)).toEqual(0)
+    #expect(f.get_frame_bird_py(1,1)).toBeGreaterThan(400)
+    #expect(f.get_frame_bird_vy(1,1)).toBeGreaterThan(0)
+    #expect(f.get_frame_bird_px(1,2)).toBeLessThan(500)
+    #expect(f.get_frame_bird_vx(1,2)).toBeLessThan(0)
+    #expect(f.get_frame_bird_py(1,2)).toEqual(450)
+    #expect(f.get_frame_bird_vy(1,2)).toEqual(0)
+    #expect(f.get_frame_bird_px(1,3)).toEqual(450)
+    #expect(f.get_frame_bird_vx(1,3)).toEqual(0)
+    #expect(f.get_frame_bird_py(1,3)).toBeLessThan(500)
+    #expect(f.get_frame_bird_vy(1,3)).toBeLessThan(0)
