@@ -261,13 +261,14 @@ class @Flock
         weight = weight + w
         dx = ar[0][id] * w
         dy = ar[1][id] * w
+        len = Math.sqrt(x * x + y * y )
         delta_len = Math.sqrt( dx * dx + dy * dy )
-        if @debug then console.log 'update_b', id, pair[2], 'dx,dy,w:', dx, dy, w, 'arX[id],arY[id]=', ar[0][id], ar[1][id], 'x,y=', x, y, 'len, delta_len', len, delta_len
+        if @debug then console.log 'update_b', id, pair[2], 'dx,dy,w:', dx, dy, w, 'arX[id],arY[id]=', ar[0][id], ar[1][id], 'x,y=', x, y, 'len,delta_len,maxv', len, delta_len, @maxv
         if delta_len + len > @maxv
-          delta_len = @maxv - len
-          dx = dx / delta_len
-          dy = dy / delta_len
-          if @debug then console.log 'update_c', id, pair[2], delta_len, dx, dy
+          scale = (@maxv - len) /delta_len
+          dx = dx * scale
+          dy = dy * scale
+          if @debug then console.log 'update_c', id, pair[2], 'hit maxv: delta_len,dx,dy', delta_len, dx, dy
         x = x + dx
         y = y + dy
         if @debug then console.log 'update_d', id, pair[2], 'x,y,dx,dy:', x,y, dx, dy
