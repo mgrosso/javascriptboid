@@ -140,9 +140,12 @@ class @Flock
   _length: (a, b) ->
     Math.sqrt( a * a + b * b )
   _pdelta: (a1, a2, size ) ->
-    d1 = a1 - a2
+    d1 = a2 - a1
     d2 = size + Math.min( a1 - a2, a2 - a1 )
+    d2 = if ( a1 < a2 ) then d2 * -1 else d2
     ret = if Math.abs(d1) < Math.abs(d2) then d1 else d2
+    if(@debug) then console.log 'pdelta', 'a1,a2,size=', a1, a2, size, 'd1,d2,ret=', ret
+    ret
   _norm: (x, y) ->
     if x==0 and y==0 
       ret = [ 0, 0]
@@ -158,35 +161,28 @@ class @Flock
     @xdeltas   = []
     @ydeltas   = []
     for i in [0..(@boids-1)]
-      for j in [0..(@boids-1)] when j > i
+      for j in [0..(@boids-1)] when j != i
         xd = @_pdelta( @_x(i), @_x(j), @width )
         yd = @_pdelta( @_y(i), @_y(j), @height )
-        d = @distances[ i * @boids + j ] = Math.sqrt( xd * xd + yd * yd )
+        idx = i * @boids + j
+        d = @distances[ idx ] = Math.sqrt( xd * xd + yd * yd )
         @neighbors.add d, i, j
-        @neighbors.add d, j, i
-        @xdeltas[i * @boids + j] = xd
-        @xdeltas[j * @boids + i] = - xd
-        @ydeltas[i * @boids + j] = yd
-        @ydeltas[j * @boids + i] = - yd
+        @xdeltas[idx] = xd
+        @ydeltas[idx] = yd
         if @debug then console.log 'distance:',i, j, d, xd, yd, @neighbors.get(i)
+    if @debug then console.log 'distances', @distances
     @distances
   _distance: (i, j ) ->
     if i == j 
       [ 0, 0, 0 ]
-    else if j < i
+    else 
       [ 
-        @distances[j * @boids + i], 
-        @xdeltas[i * @boids + j], 
-        @ydeltas[i * @boids + j] 
-      ]
-    else
-      [ 
-        @distances[i * @boids + j],
+        @distances[i * @boids + j], 
         @xdeltas[i * @boids + j], 
         @ydeltas[i * @boids + j] 
       ]
   _force: (distance, cutoff) ->
-    force = @boidsize / ( distance * distance )
+    force = -1 * @boidsize / ( distance * distance )
     force = 0 if distance > cutoff 
     force
   _avoid: ->
@@ -198,9 +194,9 @@ class @Flock
         force = @_force(distance, @avoid_cutoff )
         ixd = ixd + xd * force
         iyd = iyd + yd * force
-        #console.log '_avoid',i,j,'diff=',xd,yd,'distance,force =',distance,force,'ixd,iyd=',ixd,iyd 
+        if @debug then console.log '_avoid',i,j,'diff=',xd,yd,'distance,force =',distance,force,'ixd,iyd=',ixd,iyd 
       [ nixd, niyd ] = @_norm( ixd, iyd)
-      #console.log '_avoid B: ',i, ixd, iyd, nixd, niyd
+      if @debug then console.log '_avoid B: ',i, ixd, iyd, nixd, niyd
       ret[0][i] = nixd
       ret[1][i] = niyd
     ret
@@ -225,10 +221,12 @@ class @Flock
       if sz == 0
         ret[0][i] = ret[1][i] = 0
       else
-        fx=(m,a)=>m=m+@_pdelta(@_x(a[1]),@_x(i),@width)
-        fy=(m,a)=>m=m+@_pdelta(@_y(a[1]),@_y(i),@height)
+        if @debug then console.log 'center', i, pairs
+        fx=(m,a)=>m=m+@_pdelta(@_x(i),@_x(a[1]),@width)
+        fy=(m,a)=>m=m+@_pdelta(@_y(i),@_y(a[1]),@height)
         ret[0][i] = _(pairs).reduce( fx, 0 ) / sz
         ret[1][i] = _(pairs).reduce( fy, 0 ) / sz
+    if @debug then console.log 'center complete:',ret
     ret
   _jitter: ->
     [@_random_velocities(1), @_random_velocities(1) ]
