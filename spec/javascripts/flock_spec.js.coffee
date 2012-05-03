@@ -151,27 +151,38 @@ describe window.Flock, ->
   
   it "figures torus distances correctly", ->
     f = make_test_flock()
-    #f.console_debug()
+    f.console_debug()
+    console.log "start: figure torus correctly"
     expect(f._pdelta(90,10,100)).toEqual(20)
-    expect(f._pdelta(11,90,100)).toEqual(21)
+    expect(f._pdelta(11,90,100)).toEqual(-21)
+    expect(f._pdelta(400,400,410)).toEqual(0)
+    expect(f._pdelta(40,40,410)).toEqual(0)
+    expect(f._pdelta(400,40,410)).toEqual(50)
+    expect(f._pdelta(400,90,410)).toEqual(100)
+    expect(f._pdelta(40,400,410)).toEqual(-50)
+
+    expect(f._pdelta(40,91,410)).toEqual(51)
+    expect(f._pdelta(91,40,410)).toEqual(-51)
+
+    expect(f._pdelta(90,400,410)).toEqual(-100)
+    console.log "done: figure torus correctly"
 
   it "centers to the center over an edge", ->
-    h = { center: 1, width: 415, height: 1000 }
+    h = { center: 1, width: 410, height: 1000 }
     window.flock = f = make_test_flock h
     #diamond shape
-    #f.console_debug()
+    f.console_debug()
     f.set_bird 0, 400, 450, 0, 0
     f.set_bird 1, 40,  400, 0, 0
     f.add_bird    90,  450, 0, 0
     f.add_bird    40,  500, 0, 0
-    f.maxv = 3
-    f.maxa = f.maxv * 100
+    f.maxa = 500
     f.start(1)
     expect(f.get_frame_bird_px(1,0)).toBeGreaterThan(400)
     expect(f.get_frame_bird_vx(1,0)).toBeGreaterThan(0)
     expect(f.get_frame_bird_py(1,0)).toEqual(450)
     expect(f.get_frame_bird_vy(1,0)).toEqual(0)
-    #expect(f.get_frame_bird_px(1,1)).toEqual(450)
+    #expect(f.get_frame_bird_px(1,1)).toEqual(40)
     #expect(f.get_frame_bird_vx(1,1)).toEqual(0)
     #expect(f.get_frame_bird_py(1,1)).toBeGreaterThan(400)
     #expect(f.get_frame_bird_vy(1,1)).toBeGreaterThan(0)
