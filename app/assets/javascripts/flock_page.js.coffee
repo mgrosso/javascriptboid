@@ -28,6 +28,7 @@
   $("#show_numbers").click => f.toggle_numbers()
   $("#slower").click => f.slower()
   $("#faster").click => f.faster()
+  $("#editbutton").click -> $(".reveal").toggleClass("hide");
   #######################################################################
   vcomp = (name) ->
     $('#' + name).click => 
