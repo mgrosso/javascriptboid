@@ -1,0 +1,84 @@
+@mixin box-shadow {
+    -moz-box-shadow: grey 2px 2px 2px;
+    -webkit-box-shadow: grey 2px 2px 2px;
+}         
+@mixin htext-shadow {text-shadow: 0 1px 3px #999999;}
+@mixin curved($radius: 7px) {
+    border-radius: $radius;
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+}          
+@mixin vertcenter {
+  /* Firefox */
+  display:-moz-box;
+  -moz-box-orient:horizontal;
+  -moz-box-pack:center;
+  -moz-box-align:center;
+
+  /* Safari and Chrome */
+  display:-webkit-box;
+  -webkit-box-orient:horizontal;
+  -webkit-box-pack:center;
+  -webkit-box-align:center;
+
+  /* W3C */
+  display:box;
+  box-orient:horizontal;
+  box-pack:center;
+  box-align:center;
+}
+
+#flockwrap { position: absolute; top: 0; left: 0; }
+#flock { position: relative; margin: 0em; padding:0em; }
+#flock canvas { 
+    z-index: 1;
+    position: absolute; top: 0; left: 0; 
+    clear: left ; 
+    display: block; 
+    cursor: crosshair;
+}
+#editwrap { 
+  opacity: 0.6;
+  position: relative ; 
+  padding: 5px;
+  z-index: 10;
+}
+#editbutton { 
+  clear: both; 
+  float: left;
+  background-image: url(<%= asset_data_uri "rky/32/setting.png" %> )!important;  
+}
+.clearfix {clear: both;}
+
+.hide { display: none;}
+
+#flockwrap .link { 
+  @include curved;
+  @include htext-shadow;
+  @include box-shadow;
+  @include vertcenter;
+  float: left; 
+  clear: none; 
+  cursor: pointer; 
+  height:35px;
+  border: solid 2px grey; 
+  margin: 0 5px 5px 0; 
+  padding: 5px; 
+  font-weight: bold;
+  text-decoration:none;
+}
+#flockwrap .link.icon { 
+  width: 35px; 
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#flockwrap .link{ border: solid 2px black; }
+#flockwrap .link:hover { border: solid 2px grey; }
+#flockwrap .link:focus { border: solid 2px grey; }
+#flockwrap .link:active { border: solid 2px orange; }
+#details, #header, #controls { 
+  float: left; clear: both; overflow: auto; 
+}
+#start { background-image: url(<%= asset_data_uri "rky/32/controller-play.png" %> ) !important;  }
+#stop { background-image: url(<%= asset_data_uri "rky/32/controller-pause.png" %> ) !important;  }
+#initialize { background-image: url(<%= asset_data_uri "rky/32/reload.png" %> ) !important;  }
