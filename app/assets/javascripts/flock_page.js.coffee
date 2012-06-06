@@ -21,8 +21,13 @@
   $("#start").click => f.start()
   $("#stop").click => f.stop()
   $("#toggle_halo").click => f.toggle_halo()
-  $("#initialize").click => f.initialize()
-  $("#step").click => f.step()
+  $("#initialize").click => 
+    f.stop()
+    f.initialize()
+    f.start()
+  $("#step").click => 
+    f.stop()
+    f.step()
   $("#redraw").click => f.redraw()
   $("#console_debug").click => f.console_debug()
   $("#show_numbers").click => f.toggle_numbers()
