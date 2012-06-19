@@ -8,3 +8,8 @@ DONE add js unit testing framework
 add unit tests per each behavior
 fix "center should point to middle of two boids"
 goalseek
+
+DONE UI First Pass
+UI revisit (add proper) icons
+UI add treatment and appropriate behavior for detail links
+UI add active state for buttons (eg. 'play/pause' and 'info')

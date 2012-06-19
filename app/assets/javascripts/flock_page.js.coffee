@@ -18,10 +18,18 @@
   h['goalseek'] =   Number(h['goalseek'])
   f = new Flock( h['name'], h['avoid'], h['align'], h['center'], h['jitter'], h['goalseek'], h['boids'], h['boidsize'], h['width'], h['height'], h['store_history'] )
   #######################################################################
-  $("#start").click => f.start()
-  $("#stop").click => f.stop()
+  $("#start").click => 
+    $("#start").toggleClass("hide");
+    $("#stop").toggleClass("hide");
+    f.start();
+  $("#stop").click => 
+    $("#start").toggleClass("hide");
+    $("#stop").toggleClass("hide");
+    f.stop();
   $("#toggle_halo").click => f.toggle_halo()
-  $("#initialize").click => 
+  $("#initialize").click =>
+    $('#start').addClass("hide");
+    $('#stop').removeClass("hide");
     f.stop()
     f.initialize()
     f.start()
@@ -33,7 +41,10 @@
   $("#show_numbers").click => f.toggle_numbers()
   $("#slower").click => f.slower()
   $("#faster").click => f.faster()
-  $("#editbutton").click -> $(".reveal").toggleClass("hide");
+  $("#editbutton").click ->
+    $(this).toggleClass("selected");
+    $('#editwrap').toggleClass("active");
+    $(".reveal").toggleClass("hide");
   #######################################################################
   vcomp = (name) ->
     $('#' + name).click => 
