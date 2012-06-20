@@ -1,6 +1,43 @@
+// It's clobberin’ time!
+*, *:hover {
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* @group sass variables */
+
+// Colors
+$primary: rgba(220,220,220,.3);
+$secondary: rgba(64,64,64,.3);
+
+$activeText: #cae6fa;
+$activeBackground: rgba(9,2,16,0.7);
+$activeHover: rgb(255,128,32);
+
+/* @end sass variables */
+
+/* @group mixins */
+
+@mixin transition($attributes:all,$duration:.2s,$ease:ease-in-out) {
+  -moz-transition:$attributes $duration $ease;
+  -ms-transition:$attributes $duration $ease;
+  -webkit-transition:$attributes $duration $ease;
+}
+
+@mixin gradient($gradstart:$primary,$gradstop:$secondary,$stop1:0%,$stop2:100%) {
+    // the fallback is a weighted mix of the two source colors.
+  background: mix($gradstart, $gradstop, $stop1);
+                // mix(color1, with_color2, weighted_percentage)
+  background:        -moz-linear-gradient(top, $gradstart $stop1, $gradstop $stop2);
+  background:            -webkit-gradient(linear, left top, left bottom, color-stop($stop1,$gradstart), color-stop($stop2,$gradstop));
+  background:     -webkit-linear-gradient(top, $gradstart $stop1,$gradstop $stop2);
+  background:          -o-linear-gradient(top, $gradstart $stop1,$gradstop $stop2);
+  background:             linear-gradient(top, $gradstart $stop1,$gradstop $stop2);
+}
 @mixin box-shadow {
-    -moz-box-shadow: grey 2px 2px 2px;
-    -webkit-box-shadow: grey 2px 2px 2px;
+    box-shadow: rgba(0,0,0,.2) 2px 2px 2px;
 }         
 @mixin htext-shadow {text-shadow: 0 1px 3px #999999;}
 @mixin curved($radius: 7px) {
@@ -28,6 +65,28 @@
   box-align:center;
 }
 
+/* @end mixins */
+
+/* @group helpers */
+
+.ir {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.clearfix {
+  &:after {
+    content:'';
+    clear: both;
+  }
+}
+
+.hide { display: none !important;}
+
+/* @end  helpers */
+
+
 #flockwrap { position: absolute; top: 0; left: 0; }
 #flock { position: relative; margin: 0em; padding:0em; }
 #flock canvas { 
@@ -37,48 +96,101 @@
     display: block; 
     cursor: crosshair;
 }
-#editwrap { 
-  opacity: 0.6;
-  position: relative ; 
+#header {
+  .flock_title {
+    display: block !important;
+    float: right;
+    width: auto;
+    font-size:4em;
+    font-weight:100;
+    line-height:1em;
+    padding:0;
+    margin: .2em .5em;
+  }
+}
+#editwrap {
+  position: fixed; 
+  top:0;
+  left:0;
+  right:0;
   padding: 5px;
   z-index: 10;
+  background:rgba(0,0,0,.1);
+  @include gradient(rgba(0,0,0,.2), rgba(0,0,0,0), 0%, 2%);
+  @include transition;
 }
-#editbutton { 
-  clear: both; 
+#editwrap.active { // #editwrap:hover, 
+    background: rgba(0,0,0,.4);
+    @include gradient(rgba(0,0,0,.2), rgba(0,0,0,0), 0%, 100%);
+  }
+#editbutton {
+  display: block;
   float: left;
-  background-image: url(<%= asset_data_uri "rky/32/setting.png" %> )!important;  
+  width: auto;
+  height:1.6em;
+  padding: .2em .5em;
+  @include curved(2em);
+  /*background-image: url(<%= asset_data_uri "rky/32/setting.png" %> )!important;  */
+  @include transition(all,.2s,ease-in-out);
+  span {
+    display: none;
+  }
 }
-.clearfix {clear: both;}
-
-.hide { display: none;}
-
+#editbutton:hover, .selected {
+  color: $activeText;
+  background: $activeBackground;
+  span {
+    display: inline;
+  }
+}
+.icon-play, .icon-pause {
+  font-size: 20px;
+  padding: .2em .5em;
+  width:5em;
+  border: 1px solid #eee;
+  @include curved(2em);
+  @include gradient;
+}
 #flockwrap .link { 
-  @include curved;
+  /* @include curved;
   @include htext-shadow;
-  @include box-shadow;
   @include vertcenter;
+  @include gradient;*/
   float: left; 
   clear: none; 
   cursor: pointer; 
-  height:35px;
-  border: solid 2px grey; 
+  /* height:35px; */
   margin: 0 5px 5px 0; 
-  padding: 5px; 
+  /* padding: 5px;*/
   font-weight: bold;
   text-decoration:none;
 }
-#flockwrap .link.icon { 
-  width: 35px; 
+/* #flockwrap .link.icon { 
+  min-width: 35px; 
+  width: auto;
   background-repeat: no-repeat;
   background-position: center;
+} */
+#flockwrap .link{ 
+  margin: 0 1em;
+  /*border: solid 2px black;*/
+  &:hover{
+    color: $activeHover;
+    /* @include gradient(rgba(255,200,64,.5),rgba(255,128,32,.5)); */
+  }
 }
-#flockwrap .link{ border: solid 2px black; }
-#flockwrap .link:hover { border: solid 2px grey; }
-#flockwrap .link:focus { border: solid 2px grey; }
-#flockwrap .link:active { border: solid 2px orange; }
-#details, #header, #controls { 
-  float: left; clear: both; overflow: auto; 
+#flockwrap .link:hover { /*border: solid 2px grey;*/ }
+#flockwrap .link:focus { /*border: solid 2px grey;*/ }
+#flockwrap .link:active { /*border: solid 2px orange;*/ }
+#details {  /* #header, #controls */
+  float: left;
+  clear: left;
+  overflow: auto;
+  color: $activeBackground;
+  background:rgba(220,220,220,.6);
+  @include curved(2em);
 }
-#start { background-image: url(<%= asset_data_uri "rky/32/controller-play.png" %> ) !important;  }
-#stop { background-image: url(<%= asset_data_uri "rky/32/controller-pause.png" %> ) !important;  }
-#initialize { background-image: url(<%= asset_data_uri "rky/32/reload.png" %> ) !important;  }
+#controls {clear: left;}
+#start { /* background-image: url(<%= asset_data_uri "rky/32/controller-play.png" %> ) !important; */  }
+#stop { /* background-image: url(<%= asset_data_uri "rky/32/controller-pause.png" %> ) !important; */  }
+#initialize { /* background-image: url(<%= asset_data_uri "rky/32/reload.png" %> ) !important; */  }

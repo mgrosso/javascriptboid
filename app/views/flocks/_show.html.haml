@@ -1,24 +1,31 @@
 #flockwrap
+
   #flock 
     %canvas#cv{ width: @flock.width, height: @flock.height }
   #editwrap
-    %h1= "Javascript Boid Flocking Algorithm"
-    %a#editbutton.link.icon= " "
-    #header.reveal.hide
-      %h2= "#{@flock.name}"
+    // %h1= "Boids"
+    // %h2 Javascript Flocking Algorithm
+    #header
+      %h1.flock_title= "#{@flock.name}"
+      %a#editbutton.icon-cog
+        %span
+          Settings
     #controls.reveal.hide
-      %a#start.link.icon 
-      %a#stop.link.icon 
-      %a#initialize.link.icon 
-      %a#step.link Step
-      %a#toggle_halo.link Halo
-      %a#redraw.link Redraw
-      %a#faster.link Faster
-      %a#slower.link Slower
-      %a#console_debug.link Console Debug
-      %a#show_numbers.link Numbers
-      .link.icon= link_to 'New', new_flock_path
-      .link.icon= link_to 'Back', flocks_path
+      %a#slower.icon-fast-bw{:title => 'Slower'}
+      %a#start.icon-play.hide{:title => 'Start the simulation'}
+        Play
+      %a#stop.icon-pause{:title => 'Stop the simulation'}
+        Pause
+      %a#faster.icon-fast-fw{:title => 'Faster'}
+      %a#initialize.icon-shuffle{:title => 'Intitialize'}
+      %a#step.icon-to-end{:title => 'Step Forward'}
+      %a#toggle_halo.icon-target{:title => 'Show perimeters'}
+      // TODO: new icon
+      %a#redraw.icon-record{:title => 'Redraw'}
+      %a#console_debug.icon-doc-text{:title => 'Console Debug'}
+      %a#show_numbers.icon-info-circle{:title => 'Labels'}
+      .icon.icon-plus-circle{:title => 'New Flock'}= link_to '', new_flock_path
+      .icon{:title => 'Back to index'}= link_to 'Back', flocks_path
     #details.reveal.hide
       %a#avoid.link= "Avoid: #{@flock.avoid}"
       %a#align.link= "Align: #{@flock.align}"
